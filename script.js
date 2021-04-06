@@ -3,11 +3,14 @@ import { Canvas } from "./lib.js";
 
 const canv = new Canvas(document.getElementById("mainCanvas"));
 
+const keys = {};
+
 let test = new Player(10, 50, 20, 20);
 
 console.log(test);
 
 const update = () => {
+	test.update(keys);
 }
 
 const draw = () => {
@@ -21,5 +24,16 @@ const loop = () => {
 	update();
 	draw();
 }
+
+window.addEventListener("keydown", (evt) => {
+	keys[evt.key] = true;
+	evt.preventDefault();
+	return false;
+});
+window.addEventListener("keyup", (evt) => {
+	keys[evt.key] = false;
+	evt.preventDefault();
+	return false;
+});
 
 setInterval(loop, 1000/60);

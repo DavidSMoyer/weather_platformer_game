@@ -12,13 +12,16 @@ export default class WorldObject {
      * @param {number} height 
      */
     constructor(x, y, width, height) {
-        this.col = new Collider2(x, y, width, height)
+        this.col = new Collider2(x, y, width, height);
     }
 
-    /**
-     * @param {Canvas} canv 
-     */
     draw = canv => {
         canv.rect(this.col.pos.x, this.col.pos.y, this.col.size.x, this.col.size.y);
+    }
+    update = () => {
+        this.col.acc.y = 0.5;
+        this.col.update();
+        this.col.subUpdate();
+        this.col.wallLimit({x:500,y:500}, {});
     }
 }
