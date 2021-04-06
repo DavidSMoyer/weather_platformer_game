@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/DavidSMoyer/weather_platformer_game/issues"
   },
-  "homepage": "https://github.com/DavidSMoyer/weather_platformer_game#readme"
+  "homepage": "https://github.com/DavidSMoyer/weather_platformer_game#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.2"
+  }
 }
