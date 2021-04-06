@@ -1,0 +1,1 @@
+export * from "https://javakid0826.github.io/Methlib-js/methlib.js";
