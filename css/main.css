@@ -74,3 +74,23 @@ canvas {
 #leaderboard-left {
   left: 0;
 }
+
+#nickname {
+  box-sizing: border-box;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.nick-input {
+  margin-top: 20px;
+}
+
+input[type="submit"] {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+input, input::placeholder {
+  font-family: 'Press Start 2P', Helvetica, sans-serif;
+}
