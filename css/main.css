@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+}
+
+canvas {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  border: 1px solid black;
+}
+
+#popup {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #eeeeee;
+}
+
+#popup.hidden {
+  display: none;
+}
+
+#leaderboard-right,
+#leaderboard-left {
+  height: 500px;
+  width: 400px;
+  background-color: #eee;
+  position: absolute;
+}
+
+#leaderboard-right {
+  right: 0;
+}
+
+#leaderboard-left {
+  left: 0;
+}
