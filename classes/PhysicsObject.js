@@ -1,10 +1,10 @@
-import { WorldObject } from "./WorldObject";
+import WorldObject from "./WorldObject.js";
 
 /**
  * Class for all dynamic objects in the world
  * @extends WorldObject
  */
-export class PhysicsObject extends WorldObject{
+export default class PhysicsObject extends WorldObject{
     constructor(x, y, width, height){
         super(x, y, width, height);
     }

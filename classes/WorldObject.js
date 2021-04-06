@@ -1,7 +1,9 @@
+import { Collider2, Canvas } from "../lib.js";
+
 /**
  * Class for all objects in the world
  */
-export class WorldObject {
+export default class WorldObject {
     /**
      * @constructor
      * @param {number} x 
@@ -10,6 +12,13 @@ export class WorldObject {
      * @param {number} height 
      */
     constructor(x, y, width, height) {
+        this.col = new Collider2(x, y, width, height)
+    }
 
+    /**
+     * @param {Canvas} canv 
+     */
+    draw = canv => {
+        canv.rect(this.col.pos.x, this.col.pos.y, this.col.size.x, this.col.size.y);
     }
 }

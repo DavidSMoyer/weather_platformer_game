@@ -1,9 +1,9 @@
-import { PhysicsObject } from "./PhysicsObject";
+import PhysicsObject from "./PhysicsObject.js";
 
 /**
  * Class for the player
  * @extends PhysicsObject
  */
-export class Player extends PhysicsObject {
+export default class Player extends PhysicsObject {
 
 }
