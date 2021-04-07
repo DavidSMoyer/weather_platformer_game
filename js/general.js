@@ -30,4 +30,9 @@ nickForm.addEventListener("submit", (e) => {
 
 (async () => {
   const scoreData = await fetch("/API/score").then(response => response.json());
+
 })()
+
+function fillLeaderboard(ice, fire, neutral, wet) {
+  
+}
