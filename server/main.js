@@ -49,25 +49,94 @@ const recreateScoreDB = db => {
     const web = express();
 
     web.use(express.static('./www'));
-    web.get('/api/score', (req, res) => {
-      console.log(req);
-      res.send('Score Data');
+    web.get('/api/score', async (req, res) => {
+      try {
+        console.log(req.query);
+        req.query.id = parseInt(req.query.id);
+        if (isNaN(req.query.id) || req.query.id < 0) {
+          res.status(400);
+          res.send("ID Required");
+          return;
+        }
+
+        const data = await queryDB(db, `SELECT * FROM playerScores WHERE id == ${req.query.id}`);
+        if (data.length == 0) throw new Error("no results for score with id: " + req.query.id);
+        res.status(200);
+        res.send(data[0]);
+      } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+      }
     });
 
-    web.post('/api/score', (req, res) => {
-      console.log(req);
-      res.send('Score Post');
+    web.get('/api/scores', async (req, res) => {
+      try {
+        console.log(req.query);
+        // req.query.id = parseInt(req.query.id);
+        // if (isNaN(req.query.id) || req.query.id < 0) {
+        //   res.status(400);
+        //   res.send("ID Required");
+        //   return;
+        // }
+
+        const data = await queryDB(db, `SELECT * FROM playerScores`);
+        res.status(200);
+        res.send(data);
+      } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+      }
+    });
+
+    web.post('/api/score', async (req, res) => {
+      try {
+        if (!req.query.name || !req.query.name.trim()) {
+          res.status(400);
+          res.send("Name Required");
+          return;
+        }
+
+        req.query.time = parseInt(req.query.time);
+        if (isNaN(req.query.time)) {
+          res.status(400);
+          res.send("Time Required");
+          return;
+        }
+
+        if (!req.query.weather || !req.query.weather.trim()) {
+          req.query.weather = "[]";
+        }
+
+        req.query.coins = parseInt(req.query.coins);
+        if (isNaN(req.query.coins) || req.query.coins < 0) {
+          req.query.coins = 0;
+        }
+
+        req.query.level = parseInt(req.query.level);
+        if (isNaN(req.query.level) || req.query.level < 0) {
+          res.status(400);
+          res.send("Level Required");
+          return;
+        }
+
+        await insertDB(db, `INSERT INTO playerScores (nick, time, weather, collected, level) VALUES ('${req.query.name}', ${req.query.time}, '${req.query.weather}', ${req.query.time}, ${req.query.level});`);
+        res.sendStatus(200);
+      } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+      }
     });
 
     web.get('*', (req, res) => {
       res.redirect('index.html');
     });
 
-    web.listen(8080);
+    const server = web.listen(8080);
 
-    //console.log(await insertDB(db, "INSERT INTO playerScores (nick, time, weather, collected, level) VALUES ('test', 1, 'snow', 0, 0);"))
+    //runs before process exit caused error when posting score, db never closed
+    //db.close();
+
     //console.log(await queryDB(db, "SELECT * FROM playerScores"));
-    db.close();
   } catch(e) {
     console.log("Error: " + e);
   }

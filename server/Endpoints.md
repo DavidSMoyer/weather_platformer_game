@@ -2,7 +2,7 @@
 
 type: GET 
 
-URL: /API/score 
+URL: /API/scores 
 
 parameters:
  - page: int, default = 0, page of data to be requested
@@ -18,7 +18,7 @@ parameters:
 
 type: GET 
 
-URL: /API/score 
+URL: /API/score
 
 parameters:
  - id: int, id of the score being requested 
