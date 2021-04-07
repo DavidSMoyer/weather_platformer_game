@@ -1,4 +1,4 @@
-import WorldObject from "./WorldObject";
+import WorldObject from "./WorldObject.js";
 
 export const objsEnum = Object.freeze({
 	"block":0,
@@ -23,5 +23,10 @@ export const objSizes = Object.freeze({
 export default class EnvironmentObject extends WorldObject {
 	constructor(x, y, type) {
 		super(x, y, objSizes[type][0], objSizes[type][1]);
+
+		this.draw = (canv) => {
+			canv.fill({r:0,g:255,b:0});
+			canv.rect(this.col.pos.x, this.col.pos.y, this.col.size.x, this.col.size.y);
+		}
 	}
 }

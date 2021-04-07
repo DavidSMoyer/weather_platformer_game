@@ -18,6 +18,7 @@ export default class WorldObject {
     draw = canv => {
         canv.rect(this.col.pos.x, this.col.pos.y, this.col.size.x, this.col.size.y);
     }
+    
     update = () => {
         this.col.acc.y = 0.5;
         this.col.update();
