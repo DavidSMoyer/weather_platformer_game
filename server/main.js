@@ -71,6 +71,8 @@ const recreateScoreDB = db => {
 
     web.get('/api/scores', async (req, res) => {
       try {
+        let whereString = "WHERE 1 == 1";
+
         req.query.page = parseInt(req.query.page);
         if (isNaN(req.query.page) || req.query.page < 0) {
           req.query.page = 0;
@@ -82,11 +84,15 @@ const recreateScoreDB = db => {
         }
 
         req.query.level = parseInt(req.query.level);
-        if (isNaN(req.query.level) || req.query.level < 0) {
-          req.query.level = -1;
+        if (!(isNaN(req.query.level) || req.query.level < 0)) {
+          whereString += " AND level == " + req.query.level;
         }
 
-        const data = await queryDB(db, `SELECT * FROM playerScores ${req.query.level!=-1?("WHERE level == " + req.query.level):""} ORDER BY time DESC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
+        if (req.query.weather && req.query.weather.trim()) {
+          whereString += ` AND weather LIKE '%${req.query.weather}%'`;
+        }
+
+        const data = await queryDB(db, `SELECT * FROM playerScores ${whereString} ORDER BY time DESC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
         res.status(200);
         res.send(data);
       } catch(e) {
