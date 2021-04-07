@@ -12,7 +12,7 @@ parameters:
   
  example: /API/score?page=0&limit=5 
  
- result: not set
+ result: [{"id":1,"nick":"test","time":1,"weather":"snow","collected":"0","level":0},{"id":2,"nick":"test","time":1,"weather":"snow","collected":"0","level":0},{"id":3,"nick":"bill","time":1,"weather":"[]","collected":"1","level":0}]
  
  **Get Score By ID** 
 
@@ -26,7 +26,7 @@ parameters:
   
  example: /API/score?id=1
  
- result: not set 
+ result: {"id":1,"nick":"test","time":1,"weather":"snow","collected":"0","level":0}
  
    **Post Score** 
 
@@ -44,4 +44,4 @@ parameters:
   
  example: /API/score?name=bob&time=10&weather=['ice']&coins=25&level=2
  
- result: not set
+ result: 200 for successful post
