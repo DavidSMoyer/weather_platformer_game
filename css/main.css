@@ -1,6 +1,27 @@
 body {
   margin: 0;
   font-family: 'Press Start 2P', Helvetica, sans-serif;
+  background-color: #cee7f2;
+}
+
+body.hot {
+  background-color: #ffedc9;
+}
+
+body.cold {
+  background-color: #ccfdff;
+}
+
+body.wet {
+  background-color: #ccdcff;
+}
+
+body.wet.cold {
+  background-color: #9bcede;
+}
+
+body.wet.hot {
+  background-color: #b9a1d4;
 }
 
 ul {
@@ -28,6 +49,10 @@ canvas {
 
 #popup.hidden {
   display: none;
+}
+
+#popup p {
+  font-size: 10px;
 }
 
 #leaderboard-right,

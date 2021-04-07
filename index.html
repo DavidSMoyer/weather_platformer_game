@@ -7,13 +7,14 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
+	<script src="js/page-weather.js" defer></script>
 	<script src="js/general.js" defer></script>
 	<title>Weather Platformer</title>
 </head>
 <body>
 	<div id="leaderboard-left">
-		<ul>
-			<li class="list-head">Leaderboard</li>
+		<ul id="fire">
+			<li class="list-head">Fire Leaderboard</li>
 			<li>1.</li>
 			<li>2.</li>
 			<li>3.</li>
@@ -25,8 +26,8 @@
 			<li>9.</li>
 			<li>10.</li>
 		</ul>
-		<ul class="hidden">
-			<li class="list-head">Leaderboard</li>
+		<ul class="hidden" id="neutral">
+			<li class="list-head">Neutral Leaderboard</li>
 			<li>1.</li>
 			<li>2.</li>
 			<li>3.</li>
@@ -40,8 +41,8 @@
 		</ul>
 	</div>
 	<div id="leaderboard-right">
-		<ul>
-			<li class="list-head">Leaderboard</li>
+		<ul id="ice">
+			<li class="list-head">Ice Leaderboard</li>
 			<li>1.</li>
 			<li>2.</li>
 			<li>3.</li>
@@ -53,8 +54,8 @@
 			<li>9.</li>
 			<li>10.</li>
 		</ul>
-		<ul class="hidden">
-			<li class="list-head">Leaderboard</li>
+		<ul class="hidden" id="wet">
+			<li class="list-head">Wet Leaderboard</li>
 			<li>1.</li>
 			<li>2.</li>
 			<li>3.</li>
@@ -73,6 +74,7 @@
 		<form id="nickname">
 			<label>Please Enter a Nickname</label>
 			<input type="text" class="nick-input">
+			<p>Numbers and letters only, 15 characters max.</p>
 			<input type="submit" value="OK">
 		</form>
 	</div>
