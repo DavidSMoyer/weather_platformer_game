@@ -3,11 +3,18 @@ let rainDelay = 100;
 const rainCanvas = document.querySelector("#rainLayer");
 const context = rainCanvas.getContext("2d");
 function weatherEffects(conditionData) {
+  if (conditionData.time.getHours() >= 19) {
+    const brightness = 1 - ((conditionData.time.getHours() - 18) / 5); 
+    document.body.style.background = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness}))`;
+  } else if (conditionData.time.getHours() <= 6) {
+    const brightness = 1 - ((conditionData.time.getHours() + 1) / 7);
+    document.body.style.background = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness}))`;
+  }
   if (conditionData.temp <= -5) document.body.classList.add("cold");
   if (conditionData.temp >= 30) document.body.classList.add("hot");
-  if (true) {
+  if (conditionData.weather === "Rain") {
     document.body.classList.add("wet");
-    setInterval(rainLoop, 10, -10)
+    setInterval(rainLoop, 10, conditionData.temp)
   }
 }
 
@@ -16,16 +23,17 @@ function RainParticle(x, y) {
 }
 
 RainParticle.prototype.move = function(temp) {
+  context.strokeStyle = "#6777bf";
   if (temp <= -5) {
     this.pos.y += 2;
     this.pos.x -= 1;
+    context.strokeStyle = "#fdfdfd";
   } else {
     this.pos.y += 6;
     this.pos.x -= 3;
+    if (temp >= 30) context.strokeStyle = "#48735b";
   }
-  context.strokeStyle = "#6777bf";
-  if (temp <= -5) context.strokeStyle = "#fdfdfd";
-  if (temp >= 30) context.strokeStyle = "#48735b";
+
   context.beginPath();
   if (temp > -5) {
     context.moveTo(this.pos.x, this.pos.y);
