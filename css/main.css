@@ -59,6 +59,7 @@ ul {
   background-color: #0f0f0f;
   z-index: 1;
   color: white;
+  border: 5px solid white;
 }
 
 #popup.hidden {
@@ -73,7 +74,6 @@ ul {
 #leaderboard-left {
   height: 500px;
   width: 400px;
-  background-color: #0f0f0f;
   position: absolute;
   color: white;
 }
@@ -83,14 +83,22 @@ ul {
   height: 100%;
   width: 100%;
   position: absolute;
+  transition: transform 1.5s;
+  z-index: 2;
+  margin: 0;
+  border: 5px solid white;
+  border-top: none;
+  background-color: #0f0f0f;
 }
 
 #leaderboard-left ul.hidden {
-  display: none;
+  transform: translate(-110%, 0%);
+  z-index: 1;
 }
 
 #leaderboard-right ul.hidden {
-  display: none;
+  transform: translate(110%, 0%);
+  z-index: 1;
 }
 
 #leaderboard-right li,
@@ -100,6 +108,7 @@ ul {
   padding: 0 20px;
   padding-top: 10px;
   box-sizing: border-box;
+  background-color: #0f0f0f;
 }
 
 #leaderboard-right li:nth-child(2n),
@@ -111,8 +120,16 @@ ul {
   right: 0;
 }
 
+#leaderboard-right ul {
+  border-right: none;
+}
+
 #leaderboard-left {
   left: 0;
+}
+
+#leaderboard-left ul {
+  border-left: none;
 }
 
 #nickname {
