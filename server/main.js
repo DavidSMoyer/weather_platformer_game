@@ -1,4 +1,5 @@
 const sqlite = require('sqlite3');
+const express = require('express');
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -45,6 +46,25 @@ const recreateScoreDB = db => {
 (async () => {
   try {
     const db = await openDB("./scores.db", recreateScoreDB);
+    const web = express();
+
+    web.get('/api/score', (req, res) => {
+      console.log(req);
+      res.send('Score Data');
+    });
+
+    web.post('/api/score', (req, res) => {
+      console.log(req);
+      res.send('Score Post');
+    });
+
+    web.get('*', (req, res) => {
+      console.log(req);
+      res.send('hello world');
+    });
+
+    web.listen(8080);
+
     //console.log(await insertDB(db, "INSERT INTO playerScores (nick, time, weather, collected, level) VALUES ('test', 1, 'snow', 0, 0);"))
     //console.log(await queryDB(db, "SELECT * FROM playerScores"));
     db.close();
