@@ -6,18 +6,15 @@ const context = rainCanvas.getContext("2d");
 
 // Loads in the conditionData from the general script
 function weatherEffects(conditionData) {
-  if (conditionData.time.getHours() >= 19) {
-    const brightness = 1 - ((conditionData.time.getHours() - 18) / 5); 
-    document.body.style.background = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness}))`;
-  } else if (conditionData.time.getHours() <= 6) {
-    const brightness = 1 - ((conditionData.time.getHours() + 1) / 7);
-    document.body.style.background = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness}))`;
+  // conditionData.time.getHours() > 8 && conditionData.time.getHours() < 19
+  if (true) {
+    //document.body.style.background = "linear-gradient(to left, black, black)";
   }
   if (conditionData.temp <= -5) document.body.classList.add("cold");
   if (conditionData.temp >= 30) document.body.classList.add("hot");
-  if (conditionData.weather === "Rain") {
+  if (true) {
     document.body.classList.add("wet");
-    setInterval(rainLoop, 10, conditionData.temp)
+    setInterval(rainLoop, 10, -10)
   }
 }
 
