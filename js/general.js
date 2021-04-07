@@ -27,3 +27,7 @@ nickForm.addEventListener("submit", (e) => {
     alert("Invalid Nickname");
   }
 });
+
+(async () => {
+  const scoreData = await fetch("/API/score").then(response => response.json());
+})()
