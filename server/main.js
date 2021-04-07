@@ -48,6 +48,7 @@ const recreateScoreDB = db => {
     const db = await openDB("./scores.db", recreateScoreDB);
     const web = express();
 
+    web.use(express.static('./www'));
     web.get('/api/score', (req, res) => {
       console.log(req);
       res.send('Score Data');
@@ -59,8 +60,7 @@ const recreateScoreDB = db => {
     });
 
     web.get('*', (req, res) => {
-      console.log(req);
-      res.send('hello world');
+      res.redirect('index.html');
     });
 
     web.listen(8080);
