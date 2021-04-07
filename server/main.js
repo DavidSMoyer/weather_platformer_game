@@ -12,7 +12,7 @@ const openDB = async (filePath, recreateFunc) => new Promise(async (resolve, rej
 
   if(!fileExists && recreateFunc !== undefined) {
     recreateFunc(db);
-    console.log("DB recreated");
+    console.log("Database not found, Database Recreated");
   }
 
   resolve(db);
@@ -71,15 +71,22 @@ const recreateScoreDB = db => {
 
     web.get('/api/scores', async (req, res) => {
       try {
-        console.log(req.query);
-        // req.query.id = parseInt(req.query.id);
-        // if (isNaN(req.query.id) || req.query.id < 0) {
-        //   res.status(400);
-        //   res.send("ID Required");
-        //   return;
-        // }
+        req.query.page = parseInt(req.query.page);
+        if (isNaN(req.query.page) || req.query.page < 0) {
+          req.query.page = 0;
+        }
 
-        const data = await queryDB(db, `SELECT * FROM playerScores`);
+        req.query.limit = parseInt(req.query.limit);
+        if (isNaN(req.query.limit) || req.query.limit < 1) {
+          req.query.limit = 25;
+        }
+
+        req.query.level = parseInt(req.query.level);
+        if (isNaN(req.query.level) || req.query.level < 0) {
+          req.query.level = -1;
+        }
+
+        const data = await queryDB(db, `SELECT * FROM playerScores ${req.query.level!=-1?("WHERE level == " + req.query.level):""} ORDER BY time DESC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
         res.status(200);
         res.send(data);
       } catch(e) {
@@ -136,7 +143,6 @@ const recreateScoreDB = db => {
     //runs before process exit caused error when posting score, db never closed
     //db.close();
 
-    //console.log(await queryDB(db, "SELECT * FROM playerScores"));
   } catch(e) {
     console.log("Error: " + e);
   }
