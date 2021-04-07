@@ -12,7 +12,8 @@
 	<title>Weather Platformer</title>
 </head>
 <body>
-	<div id="leaderboard-left">
+	<!-- Left Leaderboard -->
+	<div id="leaderboard-left" data-active="0">
 		<ul id="fire">
 			<li class="list-head">Fire Leaderboard</li>
 			<li>1.</li>
@@ -53,7 +54,9 @@
 			<li>10.</li>
 		</ul>
 	</div>
-	<div id="leaderboard-right">
+
+	<!-- Right Leaderboard -->
+	<div id="leaderboard-right" data-active="0">
 		<ul id="ice">
 			<li class="list-head">Ice Leaderboard</li>
 			<li>1.</li>
@@ -80,22 +83,26 @@
 			<li>9.</li>
 			<li>10.</li>
 		</ul>
+		<ul id="ice-wet" class="hidden">
+			<li class="list-head">Blizzard Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
 	</div>
-	<ul id="ice-wet">
-		<li class="list-head">Blizzard Leaderboard</li>
-		<li>1.</li>
-		<li>2.</li>
-		<li>3.</li>
-		<li>4.</li>
-		<li>5.</li>
-		<li>6.</li>
-		<li>7.</li>
-		<li>8.</li>
-		<li>9.</li>
-		<li>10.</li>
-	</ul>
+
+	<!-- Game Canvas -->
 	<canvas id="mainCanvas" width="500px" height="500px"></canvas>
 	<script src="script.js"></script>
+
+	<!-- Nickname Popup -->
 	<div id="popup" class="">
 		<form id="nickname">
 			<label>Please Enter a Nickname</label>
@@ -104,6 +111,8 @@
 			<input type="submit" value="OK">
 		</form>
 	</div>
+
+	<!-- Rain Canvas -->
 	<canvas id="rainLayer" width="1400px" height="800px"></canvas>
 </body>
 </html>

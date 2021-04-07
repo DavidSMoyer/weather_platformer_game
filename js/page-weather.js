@@ -1,7 +1,10 @@
+// Variables for rain effects
 let rain = [];
 let rainDelay = 100;
 const rainCanvas = document.querySelector("#rainLayer");
 const context = rainCanvas.getContext("2d");
+
+// Loads in the conditionData from the general script
 function weatherEffects(conditionData) {
   if (conditionData.time.getHours() >= 19) {
     const brightness = 1 - ((conditionData.time.getHours() - 18) / 5); 
@@ -18,6 +21,7 @@ function weatherEffects(conditionData) {
   }
 }
 
+// Rain particle class
 function RainParticle(x, y) {
   this.pos = {x: x, y: y};
 }
@@ -47,6 +51,7 @@ RainParticle.prototype.move = function(temp) {
   context.stroke();
 }
 
+// Canvas rain loop
 function rainLoop(temp) {
   context.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
   rainDelay--;
@@ -59,6 +64,7 @@ function rainLoop(temp) {
   rain.forEach(drop => drop.move(temp));
 }
 
+// Simple random int function
 function randInt(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
