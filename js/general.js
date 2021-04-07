@@ -35,8 +35,9 @@ nickForm.addEventListener("submit", (e) => {
 
 // Retrieve leaderboard stats
 (async () => {
-  const scoreData = await fetch("/API/score").then(response => response.json());
+  //const scoreData = await fetch("/API/score").then(response => response.json());
   fillLeaderboard();
+  setInterval(leaderboardLoop, 5000)
 })()
 
 // Fills the leaderboards
@@ -46,5 +47,25 @@ function fillLeaderboard(ice, fire, neutral, wet, wetfire, wetice) {
 
 // Makes the leaderboards rotate
 function leaderboardLoop() {
+  const left = document.querySelector("#leaderboard-left");
+  const leftActive = parseInt(left.dataset.active);
+  left.children[leftActive].classList.add("hidden");
+  if (leftActive + 1 >= left.children.length) {
+    left.children[0].classList.remove("hidden");
+    left.dataset.active = 0;
+  } else {
+    left.children[leftActive + 1].classList.remove("hidden");
+    left.dataset.active = leftActive + 1;
+  }
 
+  const right = document.querySelector("#leaderboard-right");
+  const rightActive = parseInt(right.dataset.active);
+  right.children[rightActive].classList.add("hidden");
+  if (rightActive + 1 >= right.children.length) {
+    right.children[0].classList.remove("hidden");
+    right.dataset.active = 0;
+  } else {
+    right.children[rightActive + 1].classList.remove("hidden");
+    right.dataset.active = rightActive + 1;
+  }
 }
