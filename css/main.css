@@ -56,8 +56,9 @@ ul {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #eeeeee;
+  background-color: #0f0f0f;
   z-index: 1;
+  color: white;
 }
 
 #popup.hidden {
@@ -72,8 +73,9 @@ ul {
 #leaderboard-left {
   height: 500px;
   width: 400px;
-  background-color: #eee;
+  background-color: #0f0f0f;
   position: absolute;
+  color: white;
 }
 
 #leaderboard-right ul,
@@ -102,7 +104,7 @@ ul {
 
 #leaderboard-right li:nth-child(2n),
 #leaderboard-left li:nth-child(2n) {
-  background-color: #dddddd;
+  background-color: #2f2f2f;
 }
 
 #leaderboard-right {
