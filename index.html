@@ -9,9 +9,15 @@
 	<link rel="stylesheet" href="css/main.css">
 	<script src="js/page-weather.js" defer></script>
 	<script src="js/general.js" defer></script>
+	<script src="js/popup.js"></script>
 	<title>Weather Platformer</title>
 </head>
 <body>
+	<!-- Error Popup -->
+	<div class="error">
+		<h2>That nickname is invalid.</h2>
+	</div>
+
 	<!-- Left Leaderboard -->
 	<div id="leaderboard-left" data-active="0">
 		<ul id="fire">
@@ -106,8 +112,8 @@
 	<div id="popup" class="hidden">
 		<form id="nickname">
 			<label>Please Enter a Nickname</label>
-			<input type="text" class="nick-input">
-			<p>Numbers and letters only, 15 characters max.</p>
+			<input type="text" class="nick-input" maxlength="15">
+			<p>Numbers and letters only, 15 character limit.</p>
 			<input type="submit" value="OK">
 		</form>
 	</div>
