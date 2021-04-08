@@ -4,10 +4,115 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/main.css">
+	<script src="js/page-weather.js" defer></script>
+	<script src="js/general.js" defer></script>
 	<title>Weather Platformer</title>
 </head>
 <body>
+	<!-- Left Leaderboard -->
+	<div id="leaderboard-left" data-active="0">
+		<ul id="fire">
+			<li class="list-head">Fire Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
+		<ul class="hidden" id="neutral">
+			<li class="list-head">Neutral Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
+		<ul class="hidden" id="hot-wet">
+			<li class="list-head">Acid Rain Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
+	</div>
+
+	<!-- Right Leaderboard -->
+	<div id="leaderboard-right" data-active="0">
+		<ul id="ice">
+			<li class="list-head">Ice Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
+		<ul class="hidden" id="wet">
+			<li class="list-head">Wet Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
+		<ul id="ice-wet" class="hidden">
+			<li class="list-head">Blizzard Leaderboard</li>
+			<li>1.</li>
+			<li>2.</li>
+			<li>3.</li>
+			<li>4.</li>
+			<li>5.</li>
+			<li>6.</li>
+			<li>7.</li>
+			<li>8.</li>
+			<li>9.</li>
+			<li>10.</li>
+		</ul>
+	</div>
+
+	<!-- Game Canvas -->
 	<canvas id="mainCanvas" width="500px" height="500px"></canvas>
 	<script src="script.js"></script>
+
+	<!-- Nickname Popup -->
+	<div id="popup" class="">
+		<form id="nickname">
+			<label>Please Enter a Nickname</label>
+			<input type="text" class="nick-input">
+			<p>Numbers and letters only, 15 characters max.</p>
+			<input type="submit" value="OK">
+		</form>
+	</div>
+
+	<!-- Rain Canvas -->
+	<canvas id="rainLayer" width="1400px" height="800px"></canvas>
 </body>
 </html>

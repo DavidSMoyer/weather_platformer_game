@@ -1,0 +1,167 @@
+body {
+  margin: 0;
+  font-family: 'Press Start 2P', Helvetica, sans-serif;
+  background-color: #303030;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+body.hot {
+  background-color: #3b0000;
+}
+
+body.cold {
+  background-color: #002e2e;
+}
+
+body.wet {
+  background-color: #000c29;
+}
+
+body.wet.cold {
+  background-color: #001033;
+}
+
+body.wet.hot {
+  background-color: #12301a;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+#mainCanvas {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  border: 1px solid black;
+}
+
+#rainLayer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+#popup {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #0f0f0f;
+  z-index: 4;
+  color: white;
+  border: 5px solid white;
+}
+
+#popup.hidden {
+  display: none;
+}
+
+#popup p {
+  font-size: 10px;
+}
+
+#leaderboard-right,
+#leaderboard-left {
+  height: 500px;
+  width: 400px;
+  position: absolute;
+  color: white;
+}
+
+#leaderboard-right ul,
+#leaderboard-left ul {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: transform 1.5s;
+  z-index: 2;
+  margin: 0;
+  border: 5px solid white;
+  border-top: none;
+  background-color: #0f0f0f;
+}
+
+#leaderboard-left ul.hidden {
+  transform: translate(-110%, 0%);
+  z-index: 1;
+}
+
+#leaderboard-right ul.hidden {
+  transform: translate(110%, 0%);
+  z-index: 1;
+}
+
+#leaderboard-right li,
+#leaderboard-left li {
+  height: 9%;
+  width: 100%;
+  padding: 0 20px;
+  padding-top: 10px;
+  box-sizing: border-box;
+  background-color: #0f0f0f;
+}
+
+#leaderboard-right li:not(.list-head),
+#leaderboard-left li:not(.list-head) {
+  font-size: 12px;
+}
+
+#leaderboard-right li:nth-child(2n),
+#leaderboard-left li:nth-child(2n) {
+  background-color: #2f2f2f;
+}
+
+#leaderboard-right {
+  right: 0;
+}
+
+#leaderboard-right ul {
+  border-right: none;
+}
+
+#leaderboard-left {
+  left: 0;
+}
+
+#leaderboard-left ul {
+  border-left: none;
+}
+
+#nickname {
+  box-sizing: border-box;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.nick-input {
+  margin-top: 20px;
+}
+
+input[type="submit"] {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+input, input::placeholder {
+  font-family: 'Press Start 2P', Helvetica, sans-serif;
+}
+
+.rain {
+  width: 5px;
+  height: 25px;
+  background-color: #6777bf;
+  position: absolute;
+  transform: rotateZ(20deg);
+}
