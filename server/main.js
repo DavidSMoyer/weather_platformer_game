@@ -64,6 +64,10 @@ const recreateScoreDB = db => {
         const data = await queryDB(db, `SELECT * FROM playerScores WHERE id == ${req.query.id}`);
         if (data.length == 0) throw new Error("no results for score with id: " + req.query.id);
         res.status(200);
+        
+        //Changes comma string to array
+        data[0].weather = data[0].weather.split(',');
+        data[0].weather.pop();
         res.send(data[0]);
       } catch(e) {
         console.log(e);
@@ -94,7 +98,13 @@ const recreateScoreDB = db => {
           whereString += ` AND weather LIKE '%${req.query.weather}%'`;
         }
 
+        
         const data = await queryDB(db, `SELECT * FROM playerScores ${whereString} ORDER BY time DESC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
+        //Changes comma string to array
+        data.forEach(score => {
+          score.weather = score.weather.split(',');
+          score.weather.pop();
+        });
         res.status(200);
         res.send(data);
       } catch(e) {
@@ -119,7 +129,16 @@ const recreateScoreDB = db => {
         }
 
         if (!req.query.weather || !req.query.weather.trim()) {
-          req.query.weather = "[]";
+          req.query.weather = [];
+        } else {
+          try {
+            req.query.weather = JSON.parse(req.query.weather).reduce((str, weather) => str + weather + ",", "");
+          } catch(e) {
+            console.log("JSON parse error: " + e);
+            res.status(400);
+            res.send("Invalid Weather Array");
+            return;
+          }
         }
 
         req.query.coins = parseInt(req.query.coins);
