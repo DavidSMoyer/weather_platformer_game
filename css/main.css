@@ -112,6 +112,11 @@ ul {
   background-color: #0f0f0f;
 }
 
+#leaderboard-right li:not(.list-head),
+#leaderboard-left li:not(.list-head) {
+  font-size: 12px;
+}
+
 #leaderboard-right li:nth-child(2n),
 #leaderboard-left li:nth-child(2n) {
   background-color: #2f2f2f;

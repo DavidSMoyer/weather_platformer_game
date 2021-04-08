@@ -35,21 +35,22 @@ nickForm.addEventListener("submit", (e) => {
 
 // Retrieve leaderboard stats
 (async () => {
-  fillLeaderboard();
+  fillLeaderboard(1);
   setInterval(leaderboardLoop, 5000)
 })()
 
 // Fills the leaderboards
-async function fillLeaderboard() {
-  const scoreData = await fetch("http://10.16.6.44:8080/API/scores").
+async function fillLeaderboard(level) {
+  let scoreData = await fetch(`http://10.16.6.44:8080/API/scores?limit=10000&level=${level}`).
     then(response => response.json());
+  console.log(scoreData);
   const sortedData = {
-    "fire": scoreData.filter(user => user.weather === "fire"),
-    "ice": scoreData.filter(user => user.weather === "ice"),
-    "neutral": scoreData.filter(user => user.weather === "neutral"),
-    "wet": scoreData.filter(user => user.weather === "wet"),
-    "blizzard": scoreData.filter(user => user.weather === "blizzard"),
-    "acid": scoreData.filter(user => user.weather === "acid")
+    "fire": scoreData.filter(user => user.weather.includes("hot") && !user.weather.includes("rain")),
+    "ice": scoreData.filter(user => user.weather.includes("ice") && !user.weather.includes("rain")),
+    "neutral": scoreData.filter(user => user.weather.length === 0),
+    "wet": scoreData.filter(user => !user.weather.includes("hot") && !user.weather.includes("ice") && user.weather.includes("rain")),
+    "blizzard": scoreData.filter(user => user.weather.includes("ice") && user.weather.includes("rain")),
+    "acid": scoreData.filter(user => user.weather.includes("hot") && user.weather.includes("rain"))
   }
   const leaderboards = {
     "fire": document.querySelector("#fire"),
@@ -66,7 +67,7 @@ async function fillLeaderboard() {
       if (sortedData[key][i] !== undefined) {
         leaderboards[key].insertAdjacentHTML('beforeend', 
         `
-          <li>${i + 1}. ${sortedData[key][i].nick} - ${sortedData[key][i].time}</li>
+          <li>${i + 1}. ${sortedData[key][i].nick} - ${(sortedData[key][i].time / 60).toFixed(2)}</li>
         `);
       } else {
         leaderboards[key].insertAdjacentHTML('beforeend', 
