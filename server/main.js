@@ -1,5 +1,6 @@
-const sqlite = require('sqlite3');
-const express = require('express');
+const sqlite = require("sqlite3");
+const express = require("express");
+const cors = require("cors");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -48,6 +49,7 @@ const recreateScoreDB = db => {
     const db = await openDB("./scores.db", recreateScoreDB);
     const web = express();
 
+    web.use(cors());
     web.use(express.static('./www'));
     web.get('/api/score', async (req, res) => {
       try {
