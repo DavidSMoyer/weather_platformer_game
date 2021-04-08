@@ -4,6 +4,7 @@ body {
   background-color: #303030;
   overflow-y: hidden;
   overflow-x: hidden;
+  transition: background-color 4s;
 }
 
 body.hot {
@@ -11,7 +12,7 @@ body.hot {
 }
 
 body.cold {
-  background-color: #002e2e;
+  background-color: #1d4d4f;
 }
 
 body.wet {
@@ -61,10 +62,14 @@ ul {
   z-index: 4;
   color: white;
   border: 5px solid white;
+  transition: top 1.25s ease-out, opacity 0.5s ease-in-out 0.5s;
+  opacity: 1;
 }
 
 #popup.hidden {
-  display: none;
+  top: -15%;
+  opacity: 0;
+  transition: top 1.25s ease-out, opacity 0.5s ease-in-out;
 }
 
 #popup p {
@@ -84,7 +89,7 @@ ul {
   height: 100%;
   width: 100%;
   position: absolute;
-  transition: transform 1.5s;
+  transition: transform 1.5s, opacity 1.5s;
   z-index: 2;
   margin: 0;
   border: 5px solid white;
@@ -94,11 +99,13 @@ ul {
 
 #leaderboard-left ul.hidden {
   transform: translate(-110%, 0%);
+  opacity: 0;
   z-index: 1;
 }
 
 #leaderboard-right ul.hidden {
   transform: translate(110%, 0%);
+  opacity: 0;
   z-index: 1;
 }
 
