@@ -35,17 +35,50 @@ nickForm.addEventListener("submit", (e) => {
 
 // Retrieve leaderboard stats
 (async () => {
-  //const scoreData = await fetch("/API/score").then(response => response.json());
   fillLeaderboard();
   setInterval(leaderboardLoop, 5000)
 })()
 
 // Fills the leaderboards
-function fillLeaderboard(ice, fire, neutral, wet, wetfire, wetice) {
-
+async function fillLeaderboard() {
+  const scoreData = await fetch("http://10.16.6.44:8080/API/scores").
+    then(response => response.json());
+  const sortedData = {
+    "fire": scoreData.filter(user => user.weather === "fire"),
+    "ice": scoreData.filter(user => user.weather === "ice"),
+    "neutral": scoreData.filter(user => user.weather === "neutral"),
+    "wet": scoreData.filter(user => user.weather === "wet"),
+    "blizzard": scoreData.filter(user => user.weather === "blizzard"),
+    "acid": scoreData.filter(user => user.weather === "acid")
+  }
+  const leaderboards = {
+    "fire": document.querySelector("#fire"),
+    "ice": document.querySelector("#ice"),
+    "neutral": document.querySelector("#neutral"),
+    "wet": document.querySelector("#wet"),
+    "blizzard": document.querySelector("#ice-wet"),
+    "acid": document.querySelector("#hot-wet")
+  }
+  for (const key in leaderboards) {
+    leaderboards[key].innerHTML = `<li class="list-head">${key.charAt(0).toUpperCase() + key.slice(1)} Leaderboard</li>`;
+    sortedData[key].sort((user1, user2) => user2.time - user1.time);
+    for (let i = 0; i < 10; i++) {
+      if (sortedData[key][i] !== undefined) {
+        leaderboards[key].insertAdjacentHTML('beforeend', 
+        `
+          <li>${i + 1}. ${sortedData[key][i].nick} - ${sortedData[key][i].time}</li>
+        `);
+      } else {
+        leaderboards[key].insertAdjacentHTML('beforeend', 
+        `
+          <li>${i + 1}.</li>
+        `);
+      }
+    }
+  }
 }
 
-// Makes the leaderboards rotate
+// Makes the leaderboards cycle
 function leaderboardLoop() {
   const left = document.querySelector("#leaderboard-left");
   const leftActive = parseInt(left.dataset.active);

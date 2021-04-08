@@ -12,9 +12,9 @@ function weatherEffects(conditionData) {
   }
   if (conditionData.temp <= -5) document.body.classList.add("cold");
   if (conditionData.temp >= 30) document.body.classList.add("hot");
-  if (true) {
+  if (conditionData.weather === "Rain") {
     document.body.classList.add("wet");
-    setInterval(rainLoop, 10, -10)
+    setInterval(rainLoop, 10, conditionData.temp)
   }
 }
 
