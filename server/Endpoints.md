@@ -8,7 +8,8 @@ parameters:
  - page: int, default = 0, page of data to be requested
  - limit: int, default = 25, number of items per page
  - level: int, default = -1 (all levels), filter results by level id
- - weather: string, default = "", filters weather based string provided
+ - weather: string, default = "", filters weather strictly based string provided
+ - hasweather: string, default = "", filters weather based string provided
  
   
  example: /API/score?page=0&limit=5 

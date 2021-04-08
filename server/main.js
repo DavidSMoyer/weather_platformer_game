@@ -53,7 +53,6 @@ const recreateScoreDB = db => {
     web.use(express.static('./www'));
     web.get('/api/score', async (req, res) => {
       try {
-        console.log(req.query);
         req.query.id = parseInt(req.query.id);
         if (isNaN(req.query.id) || req.query.id < 0) {
           res.status(400);
@@ -70,7 +69,7 @@ const recreateScoreDB = db => {
         data[0].weather.pop();
         res.send(data[0]);
       } catch(e) {
-        console.log(e);
+        console.log("score GET error: " + e);
         res.sendStatus(500);
       }
     });
@@ -95,10 +94,13 @@ const recreateScoreDB = db => {
         }
 
         if (req.query.weather && req.query.weather.trim()) {
-          whereString += ` AND weather LIKE '%${req.query.weather}%'`;
+          whereString += ` AND weather == '${req.query.weather},'`;
         }
 
-        
+        if (req.query.hasweather && req.query.hasweather.trim()) {
+          whereString += ` AND weather LIKE '%${req.query.hasweather}%'`;
+        }
+
         const data = await queryDB(db, `SELECT * FROM playerScores ${whereString} ORDER BY time DESC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
         //Changes comma string to array
         data.forEach(score => {
@@ -108,7 +110,7 @@ const recreateScoreDB = db => {
         res.status(200);
         res.send(data);
       } catch(e) {
-        console.log(e);
+        console.log("Scores GET error: " + e);
         res.sendStatus(500);
       }
     });
@@ -156,7 +158,7 @@ const recreateScoreDB = db => {
         await insertDB(db, `INSERT INTO playerScores (nick, time, weather, collected, level) VALUES ('${req.query.name}', ${req.query.time}, '${req.query.weather}', ${req.query.time}, ${req.query.level});`);
         res.sendStatus(200);
       } catch(e) {
-        console.log(e);
+        console.log("Score POST error: " + e);
         res.sendStatus(500);
       }
     });
@@ -171,6 +173,6 @@ const recreateScoreDB = db => {
     //db.close();
 
   } catch(e) {
-    console.log("Error: " + e);
+    console.log("Server Error: " + e);
   }
 })();
