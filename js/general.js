@@ -102,3 +102,8 @@ function leaderboardLoop() {
     right.dataset.active = rightActive + 1;
   }
 }
+
+// Will send leaderboard data to the server
+function sendLeaderboardData(level, time, coins, weather) {
+
+}
