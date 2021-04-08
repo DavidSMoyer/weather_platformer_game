@@ -172,3 +172,23 @@ input, input::placeholder {
   position: absolute;
   transform: rotateZ(20deg);
 }
+
+#error {
+  width: 400px;
+  font-size: 10px;
+  text-align: center;
+  border: 5px solid red;
+  color: red;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -110%);
+  background-color: #0f0f0f;
+  opacity: 1;
+  z-index: 2;
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+#error.hidden {
+  opacity: 0;
+  transform: translate(-50%, 0%);
+}

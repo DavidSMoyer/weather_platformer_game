@@ -1,4 +1,5 @@
 // Handles popup events
+const errorPopup = document.querySelector("#error");
 let errorTimeout;
 const popup = document.querySelector("#popup");
 setTimeout(() => popup.classList.remove("hidden"), 100);
@@ -11,10 +12,12 @@ nickForm.addEventListener("submit", (e) => {
     userNick = input.value;
     popup.classList.add("hidden");
   } else {
-    alert("Invalid Nickname");
+    displayError();
   }
 });
 
-function errorPopup() {
+function displayError() {
   clearTimeout(errorTimeout);
+  errorPopup.classList.remove("hidden");
+  errorTimeout = setTimeout(() => errorPopup.classList.add("hidden"), 3500);
 }
