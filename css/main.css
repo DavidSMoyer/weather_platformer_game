@@ -62,13 +62,14 @@ ul {
   z-index: 4;
   color: white;
   border: 5px solid white;
-  transition: top 1.25s ease-out, opacity 1s ease-in-out;
+  transition: top 1.25s ease-out, opacity 0.5s ease-in-out 0.5s;
   opacity: 1;
 }
 
 #popup.hidden {
   top: -15%;
   opacity: 0;
+  transition: top 1.25s ease-out, opacity 0.5s ease-in-out;
 }
 
 #popup p {
@@ -88,7 +89,7 @@ ul {
   height: 100%;
   width: 100%;
   position: absolute;
-  transition: transform 1.5s;
+  transition: transform 1.5s, opacity 1.5s;
   z-index: 2;
   margin: 0;
   border: 5px solid white;
@@ -98,11 +99,13 @@ ul {
 
 #leaderboard-left ul.hidden {
   transform: translate(-110%, 0%);
+  opacity: 0;
   z-index: 1;
 }
 
 #leaderboard-right ul.hidden {
   transform: translate(110%, 0%);
+  opacity: 0;
   z-index: 1;
 }
 
