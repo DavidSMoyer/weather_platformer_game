@@ -20,6 +20,7 @@ let userNick;
 
 // Handles popup events
 const popup = document.querySelector("#popup");
+setTimeout(() => popup.classList.remove("hidden"), 100);
 const nickForm = document.querySelector("#nickname");
 nickForm.addEventListener("submit", (e) => {
   e.preventDefault();
