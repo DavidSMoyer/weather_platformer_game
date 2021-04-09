@@ -1,22 +1,18 @@
 // API key
 const KEY = "577170a37c71d9c209c23f0d23034520";
-// Data on the surrounding conditions
-let conditionData;
 // User location
 const userLocation = navigator.geolocation.getCurrentPosition(async (pos) => {
-  conditionData = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&appid=${KEY}`).
+  currentConditions = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&appid=${KEY}`).
     then(response => response.json());
-  conditionData = {
-    weather: conditionData.weather[0].main,
-    temp: conditionData.main.temp,
+    currentConditions = {
+    weather: currentConditions.weather[0].main,
+    temp: currentConditions.main.temp,
     time: new Date()
   }
   weatherEffects(conditionData);
 }, (error) => {
   console.error(error);
 }, {enableHighAccuracy: true});
-// User nickname
-let userNick;
 
 // Retrieve leaderboard stats
 (async () => {
