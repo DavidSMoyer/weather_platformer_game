@@ -1,11 +1,24 @@
-const Sprite = function (imgSrc, width, height) {
+const Sprite = function (imgSrc, width, height, animDelay) {
   this.imgElm = document.createElement("img");
-  this.imgElm.src = imgSrc;
+  this.srcList = [...imgSrc];
+  this.imgElm.src = this.srcList[0];
   this.width = width;
   this.height = height;
+  this.animDelay = animDelay;
+  this.animMaxDelay = animMaxDelay;
+  this.frame = 0;
+  this.paused = !Array.isArray(imgSrc);
 };
 
 Sprite.prototype.render = function (gameObject, engine) {
+  if (!this.paused) {
+    this.animDelay--;
+    if (this.animDelay > 0) break;
+    this.animDelay = this.animMaxDelay;
+    this.frame++;
+    if (this.frame >= this.srcList.length) this.frame = 0;
+    this.imgElm.src = this.srcList[this.frame];
+  }
   engine.canvasCTX.drawImage(
     this.imgElm,
     gameObject.x,
