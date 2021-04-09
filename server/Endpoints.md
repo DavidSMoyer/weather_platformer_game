@@ -44,6 +44,6 @@ parameters:
  - level: int, id of level for score submission
 
   
- example: /API/score?name=bob&time=10&weather=['ice']&coins=25&level=2
+ example: /API/score?name=bob&time=10&weather=["ice"]&coins=25&level=2
  
  result: 200 for successful post
