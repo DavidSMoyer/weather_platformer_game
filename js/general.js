@@ -77,7 +77,7 @@ function leaderboardLoop() {
 
 // Will send leaderboard data to the server
 function sendLeaderboardData(level, time, coins, weather) {
-
+  
 }
 
 // Retrieve leaderboard stats

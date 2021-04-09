@@ -6,10 +6,6 @@ const context = rainCanvas.getContext("2d");
 
 // Loads in the conditionData from the general script
 function weatherEffects() {
-  // conditionData.time.getHours() > 8 && conditionData.time.getHours() < 19
-  if (true) {
-    //document.body.style.background = "linear-gradient(to left, black, black)";
-  }
   if (GlobalObject.conditionData.temp <= -5) document.body.classList.add("cold");
   if (GlobalObject.conditionData.temp >= 30) document.body.classList.add("hot");
   if (GlobalObject.conditionData.weather === "Rain") {

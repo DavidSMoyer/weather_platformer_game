@@ -13,7 +13,7 @@ body.hot {
 }
 
 body.cold {
-  background-color: #1d4d4f;
+  background-color: #1a7275;
 }
 
 body.wet {
@@ -26,6 +26,18 @@ body.wet.cold {
 
 body.wet.hot {
   background-color: #12301a;
+}
+
+body.set {
+  background-image: linear-gradient(rgba(255, 125, 50, 0.35), rgba(0, 0, 0, 0.4));
+}
+
+body.day {
+  background-image: linear-gradient(rgba(93, 244, 255, 0.25), rgba(0, 0, 0, 0.25));
+}
+
+body.night {
+  background-image: linear-gradient(rgba(62, 26, 92, 0.35), rgba(0, 0, 0, 0.5));
 }
 
 ul {
