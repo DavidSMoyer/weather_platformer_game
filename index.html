@@ -7,8 +7,10 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
+	<script src="js/global.js"></script>
 	<script src="js/page-weather.js" defer></script>
 	<script src="js/general.js" defer></script>
+	<script src="js/popup.js" defer></script>
 	<title>Weather Platformer</title>
 </head>
 <body>
@@ -104,10 +106,13 @@
 
 	<!-- Nickname Popup -->
 	<div id="popup" class="hidden">
+		<div id="error" class="hidden">
+			<h2>That nickname is invalid.</h2>
+		</div>
 		<form id="nickname">
 			<label>Please Enter a Nickname</label>
-			<input type="text" class="nick-input">
-			<p>Numbers and letters only, 15 characters max.</p>
+			<input type="text" class="nick-input" maxlength="15">
+			<p>Numbers and letters only, 15 character limit.</p>
 			<input type="submit" value="OK">
 		</form>
 	</div>
