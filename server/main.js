@@ -93,8 +93,10 @@ const recreateScoreDB = db => {
           whereString += " AND level == " + req.query.level;
         }
 
-        if (req.query.weather && req.query.weather.trim()) {
+        if (req.query.weather && req.query.weather.trim() && req.query.weather !== "NONE") {
           whereString += ` AND weather == '${req.query.weather},'`;
+        } else if (req.query.weather === "NONE") {
+          whereString += ` AND weather == ''`;
         }
 
         if (req.query.hasweather && req.query.hasweather.trim()) {
