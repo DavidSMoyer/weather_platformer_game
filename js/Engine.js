@@ -93,32 +93,29 @@ PhysicsBody.prototype.updatePhysics = function (gameObject, engine) {
           let yDepth = 0;
           let xDepth = 0;
 
-          if (collision.colliderA.gameObject.y + collision.colliderA.yOffset + collision.colliderA.height <= collision.colliderB.gameObject.y + collision.colliderB.yOffset - (collision.colliderB.height/2)) {
-            yDepth = collision.colliderA.gameObject.y + collision.colliderA.yOffset + collision.colliderA.height - collision.colliderB.gameObject.y + collision.colliderB.yOffset;
+          if (collision.colliderA.gameObject.y + collision.colliderA.yOffset + (collision.colliderA.height/2) >= collision.colliderB.gameObject.y + collision.colliderB.yOffset + (collision.colliderB.height/2)) {
+            yDepth = collision.colliderA.gameObject.y + collision.colliderA.yOffset + (collision.colliderA.height/2) - collision.colliderB.gameObject.y + collision.colliderB.yOffset + (collision.colliderB.height/2);
           } else {
-            yDepth = collision.colliderB.gameObject.y + collision.colliderB.yOffset + collision.colliderB.height - collision.colliderA.gameObject.y + collision.colliderA.yOffset;
+            yDepth = collision.colliderB.gameObject.y + collision.colliderB.yOffset + (collision.colliderB.height/2) - collision.colliderA.gameObject.y + collision.colliderA.yOffset + (collision.colliderA.height/2);
           }
 
-          if (collision.colliderA.gameObject.x + collision.colliderA.xOffset + collision.colliderA.width <= collision.colliderB.gameObject.x + collision.colliderB.xOffset - (collision.colliderB.width/2)) {
-            xDepth = collision.colliderA.gameObject.x + collision.colliderA.xOffset + collision.colliderA.height - collision.colliderB.gameObject.x + collision.colliderB.xOffset;
+          if (collision.colliderA.gameObject.x + collision.colliderA.xOffset + (collision.colliderA.width/2) <= collision.colliderB.gameObject.x + collision.colliderB.xOffset + (collision.colliderB.width/2)) {
+            xDepth = collision.colliderA.gameObject.x + collision.colliderA.xOffset + (collision.colliderA.width/2) - collision.colliderB.gameObject.x + collision.colliderB.xOffset + (collision.colliderB.width/2);
           } else {
-            xDepth = collision.colliderB.gameObject.x + collision.colliderB.xOffset + collision.colliderB.height - collision.colliderA.gameObject.x + collision.colliderA.xOffset;
+            xDepth = collision.colliderB.gameObject.x + collision.colliderB.xOffset + (collision.colliderB.width/2) - collision.colliderA.gameObject.x + collision.colliderA.xOffset + (collision.colliderA.width/2);
           }
-
-          //console.log(xDepth, yDepth);
 
           if (xDepth < yDepth) {
             self.xFriction = collision.colliderA.friction + collision.colliderB.friction;
             self.yVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
-            if(gameObject.y - this.previousY > 0) 
+            if(collision.colliderA.gameObject.y + collision.colliderA.yOffset + (collision.colliderA.height/2) <= collision.colliderB.gameObject.y + collision.colliderB.yOffset + (collision.colliderB.height/2)) 
               gameObject.y = collision.colliderB.gameObject.y + collision.colliderB.yOffset - collision.colliderA.height - collision.colliderA.yOffset;
             else
               gameObject.y = collision.colliderB.gameObject.y + collision.colliderB.yOffset + collision.colliderB.height - collision.colliderA.yOffset;
-            //self.yVelocity = 0;
           } else {
             self.yFriction = collision.colliderA.friction + collision.colliderB.friction;
             self.xVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
-            if(gameObject.x - this.previousX > 0) //Left side
+            if(collision.colliderA.gameObject.x + collision.colliderA.xOffset + (collision.colliderA.width/2) >= collision.colliderB.gameObject.x + collision.colliderB.xOffset + (collision.colliderB.width/2)) //Left side
               gameObject.x = collision.colliderB.gameObject.x + collision.colliderB.xOffset - collision.colliderA.width - collision.colliderA.xOffset;
             else
               gameObject.x = collision.colliderB.gameObject.x + collision.colliderB.xOffset + collision.colliderB.width - collision.colliderA.xOffset;
@@ -173,17 +170,28 @@ const Player = function(x, y, sprite = null, colliders = null, physicsBody = nul
   this.colliders.forEach(collider => collider.gameObject = self);
   this.input = {};
 
-  document.addEventListener('keydown', (e => {
-    this.input[e.keyCode] = true;
-  }).bind(this));
+  document.addEventListener('keydown', e => {
+    self.input[e.keyCode] = true;
+    e.preventDefault();
+  });
 
-  document.addEventListener('keyup', (e => {
-    this.input[e.keyCode] = false;
-  }).bind(this));
+  document.addEventListener('keyup', e => {
+    self.input[e.keyCode] = false;
+    e.preventDefault();
+  });
 };
 
 Player.prototype.update = function (engine) {
   const object = this;
+
+  if (this.input[39]) this.physicsBody.xVelocity = 0.04;
+
+  if (this.input[37]) this.physicsBody.xVelocity = -0.04;
+
+  if (this.input[38]) this.physicsBody.yVelocity = -0.04;
+
+  if (this.input[40]) this.physicsBody.yVelocity = 0.04;
+
   if (this.physicsBody != null) this.physicsBody.updatePhysics(this, engine);
   this.colliders.forEach((collider) => collider.renderOutline(object, engine));
   if (this.sprite !== null) this.sprite.render(this, engine);
@@ -197,8 +205,6 @@ Player.prototype.update = function (engine) {
     1
   );
   engine.canvasCTX.stroke();
-
-  console.log(this.input);
 };
 
 Player.prototype.getColliders = function() {
