@@ -8,7 +8,8 @@ parameters:
  - page: int, default = 0, page of data to be requested
  - limit: int, default = 25, number of items per page
  - level: int, default = -1 (all levels), filter results by level id
- - weather: string, default = "", filters weather based string provided
+ - weather: string, default = "", filters weather strictly based string provided
+ - hasweather: string, default = "", filters weather based string provided
  
   
  example: /API/score?page=0&limit=5 
@@ -43,6 +44,6 @@ parameters:
  - level: int, id of level for score submission
 
   
- example: /API/score?name=bob&time=10&weather=['ice']&coins=25&level=2
+ example: /API/score?name=bob&time=10&weather=["ice"]&coins=25&level=2
  
  result: 200 for successful post
