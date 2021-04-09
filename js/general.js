@@ -9,7 +9,8 @@ const userLocation = navigator.geolocation.getCurrentPosition(async (pos) => {
     temp: currentConditions.main.temp,
     time: new Date()
   }
-  weatherEffects(conditionData);
+  GlobalObject.conditionData = currentConditions;
+  weatherEffects();
 }, (error) => {
   console.error(error);
 }, {enableHighAccuracy: true});

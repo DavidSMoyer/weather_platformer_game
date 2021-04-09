@@ -5,16 +5,16 @@ const rainCanvas = document.querySelector("#rainLayer");
 const context = rainCanvas.getContext("2d");
 
 // Loads in the conditionData from the general script
-function weatherEffects(conditionData) {
+function weatherEffects() {
   // conditionData.time.getHours() > 8 && conditionData.time.getHours() < 19
   if (true) {
     //document.body.style.background = "linear-gradient(to left, black, black)";
   }
-  if (conditionData.temp <= -5) document.body.classList.add("cold");
-  if (conditionData.temp >= 30) document.body.classList.add("hot");
-  if (conditionData.weather === "Rain") {
+  if (GlobalObject.conditionData.temp <= -5) document.body.classList.add("cold");
+  if (GlobalObject.conditionData.temp >= 30) document.body.classList.add("hot");
+  if (GlobalObject.conditionData.weather === "Rain") {
     document.body.classList.add("wet");
-    setInterval(rainLoop, 10, conditionData.temp)
+    setInterval(rainLoop, 10, GlobalObject.conditionData.temp)
   }
 }
 
