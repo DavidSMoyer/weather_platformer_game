@@ -72,7 +72,7 @@ BoxCollider.prototype.isCollidingWith = function(collider) {
 const PhysicsBody = function (gravity = 0.00098, mass = 1) {
   this.gravity = gravity;
   this.mass = mass;
-  this.xVelocity = 0.006;
+  this.xVelocity = 0;
   this.yVelocity = 0;
   this.xFriction = 0;
   this.yFriction = 0;
@@ -90,7 +90,24 @@ PhysicsBody.prototype.updatePhysics = function (gameObject, engine) {
       gameObject.getColliders().forEach(ownCollider => {
         const collision = ownCollider.isCollidingWith(collider);
         if (collision) {
-          if (Math.abs(gameObject.y - this.previousY) > Math.abs(gameObject.x - this.previousX)) {
+          let yDepth = 0;
+          let xDepth = 0;
+
+          if (collision.colliderA.gameObject.y + collision.colliderA.yOffset + collision.colliderA.height <= collision.colliderB.gameObject.y + collision.colliderB.yOffset - (collision.colliderB.height/2)) {
+            yDepth = collision.colliderA.gameObject.y + collision.colliderA.yOffset + collision.colliderA.height - collision.colliderB.gameObject.y + collision.colliderB.yOffset;
+          } else {
+            yDepth = collision.colliderB.gameObject.y + collision.colliderB.yOffset + collision.colliderB.height - collision.colliderA.gameObject.y + collision.colliderA.yOffset;
+          }
+
+          if (collision.colliderA.gameObject.x + collision.colliderA.xOffset + collision.colliderA.width <= collision.colliderB.gameObject.x + collision.colliderB.xOffset - (collision.colliderB.width/2)) {
+            xDepth = collision.colliderA.gameObject.x + collision.colliderA.xOffset + collision.colliderA.height - collision.colliderB.gameObject.x + collision.colliderB.xOffset;
+          } else {
+            xDepth = collision.colliderB.gameObject.x + collision.colliderB.xOffset + collision.colliderB.height - collision.colliderA.gameObject.x + collision.colliderA.xOffset;
+          }
+
+          //console.log(xDepth, yDepth);
+
+          if (xDepth < yDepth) {
             self.xFriction = collision.colliderA.friction + collision.colliderB.friction;
             self.yVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
             if(gameObject.y - this.previousY > 0) 
@@ -143,6 +160,48 @@ GameObject.prototype.update = function (engine) {
 };
 
 GameObject.prototype.getColliders = function() {
+  return this.colliders;
+};
+
+const Player = function(x, y, sprite = null, colliders = null, physicsBody = null) {
+  const self = this;
+  this.x = x;
+  this.y = y;
+  this.sprite = sprite;
+  this.colliders = colliders === null ? [] : colliders;
+  this.physicsBody = physicsBody;
+  this.colliders.forEach(collider => collider.gameObject = self);
+  this.input = {};
+
+  document.addEventListener('keydown', (e => {
+    this.input[e.keyCode] = true;
+  }).bind(this));
+
+  document.addEventListener('keyup', (e => {
+    this.input[e.keyCode] = false;
+  }).bind(this));
+};
+
+Player.prototype.update = function (engine) {
+  const object = this;
+  if (this.physicsBody != null) this.physicsBody.updatePhysics(this, engine);
+  this.colliders.forEach((collider) => collider.renderOutline(object, engine));
+  if (this.sprite !== null) this.sprite.render(this, engine);
+
+  engine.canvasCTX.fillStyle = "#FFFFFF";
+  engine.canvasCTX.beginPath();
+  engine.canvasCTX.rect(
+    this.x,
+    this.y,
+    1,
+    1
+  );
+  engine.canvasCTX.stroke();
+
+  console.log(this.input);
+};
+
+Player.prototype.getColliders = function() {
   return this.colliders;
 };
 

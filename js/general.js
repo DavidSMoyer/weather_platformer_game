@@ -80,6 +80,13 @@ function sendLeaderboardData(level, time, coins, weather) {
   
 }
 
+function playGame() {
+  const engine = new GameEngine(document.getElementById("mainCanvas"));
+  engine.addGameObject(new GameObject(300, 380, null, [new BoxCollider(200, 10)]));
+  engine.addGameObject(new GameObject(395, 370, null, [new BoxCollider(10, 10)]));
+  engine.addGameObject(new GameObject(205, 360, null, [new BoxCollider(10, 10)], new PhysicsBody(0.00098)));
+}
+
 // Retrieve leaderboard stats
 (async () => {
   setInterval(leaderboardLoop, 5000);
@@ -88,4 +95,5 @@ function sendLeaderboardData(level, time, coins, weather) {
   const weather = await getWeather(location.lat, location.long);
   GlobalObject.conditionData = weather;
   weatherEffects(weather);
+  playGame();
 })();
