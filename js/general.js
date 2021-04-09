@@ -1,21 +1,6 @@
 // API key
-const KEY = "577170a37c71d9c209c23f0d23034520";
+const OPENWEATHER_KEY = "577170a37c71d9c209c23f0d23034520";
 const SCORE_API_URL = "http://10.16.6.44:8080/API";
-// Data on the surrounding conditions
-let conditionData;
-// User location
-const userLocation = navigator.geolocation.getCurrentPosition(async (pos) => {
-  conditionData = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&appid=${KEY}`).
-    then(response => response.json());
-  conditionData = {
-    weather: conditionData.weather[0].main,
-    temp: conditionData.main.temp,
-    time: new Date()
-  }
-  weatherEffects(conditionData);
-}, (error) => {
-  console.error(error);
-}, {enableHighAccuracy: true});
 // User nickname
 let userNick;
 
@@ -35,20 +20,38 @@ nickForm.addEventListener("submit", (e) => {
   }
 });
 
-// Retrieve leaderboard stats
-(() => {
-  fillLeaderboards(1);
-  setInterval(leaderboardLoop, 5000)
-})();
+async function getLocation(options = {timeout: 30, maximumAge: 0, enableHighAccuracy: true}) {
+  const pos = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, options)).catch(() => null);
+  if (pos === null) return {lat: Math.random() * 179, long: Math.random() * 179};
+  return {lat: pos.coords.latitude, long: pos.coords.longitude};
+}
+
+async function getWeather(lat, long) {
+  try {
+    const req = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${long}&appid=${OPENWEATHER_KEY}`);
+    if (!req.ok) throw new Error("fetch status not OK");
+    const data = await req.json();
+    return {
+      weather: data.weather[0].main,
+      temp: data.main.temp,
+    };
+  } catch(e) {
+    console.log("Weather Error: " + e);
+    return {
+      weather: "none",
+      temp: 20,
+    };
+  }
+}
 
 // Fills the leaderboards
-async function fillLeaderboards(level) {
-  await fillLeaderboard(document.querySelector("#fire"), level, "hot", "Fire");
-  await fillLeaderboard(document.querySelector("#ice"), level, "ice", "Ice");
-  await fillLeaderboard(document.querySelector("#neutral"), level, "", "Neutral");
-  await fillLeaderboard(document.querySelector("#wet"), level, "rain", "Wet");
-  await fillLeaderboard(document.querySelector("#ice-wet"), level, "ice,rain", "Blizzard");
-  await fillLeaderboard(document.querySelector("#hot-wet"), level, "rain,hot", "Acid");
+function fillLeaderboards(level) {
+  fillLeaderboard(document.querySelector("#fire"), level, "hot", "Fire");
+  fillLeaderboard(document.querySelector("#ice"), level, "ice", "Ice");
+  fillLeaderboard(document.querySelector("#neutral"), level, "", "Neutral");
+  fillLeaderboard(document.querySelector("#wet"), level, "rain", "Wet");
+  fillLeaderboard(document.querySelector("#ice-wet"), level, "ice,rain", "Blizzard");
+  fillLeaderboard(document.querySelector("#hot-wet"), level, "rain,hot", "Acid");
 }
 
 async function fillLeaderboard(board, level, weather, title) {
@@ -60,7 +63,6 @@ async function fillLeaderboard(board, level, weather, title) {
     board.innerHTML = scores.reduce((html, score, index) => html + `
       <li>${index + 1}. ${score.nick} - ${(score.time / 60).toFixed(2)}</li>
     `, `<li class="list-head">${title} Leaderboard</li>`) + "<li></li>".repeat(10 - scores.length);
-    console.log(scores);
   } catch(e) {
     console.log("Leaderboard Fill Error: " + e);
   }
@@ -95,3 +97,12 @@ function leaderboardLoop() {
 function sendLeaderboardData(level, time, coins, weather) {
 
 }
+
+// Retrieve leaderboard stats
+(async () => {
+  setInterval(leaderboardLoop, 5000);
+  fillLeaderboards(1);
+  const location = await getLocation();
+  const weather = await getWeather(location.lat, location.long);
+  weatherEffects(weather);
+})();
