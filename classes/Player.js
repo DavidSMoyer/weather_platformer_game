@@ -8,7 +8,7 @@ import WorldObject from "./WorldObject.js";
  */
 export default class Player extends PhysicsObject {
 	static influenceFrames = 10;
-	static jumpForce = -5;
+	static jumpForce = -8;
 
 	constructor(x, y) {
 		super(x, y, 20, 20);
@@ -42,7 +42,7 @@ export default class Player extends PhysicsObject {
 				this.col.vel.y = Player.jumpForce;
 				this.jumpInfluenceFrames = Player.influenceFrames;
 			} else if (this.jumpInfluenceFrames > 0) {
-				const influenceDecay = (Player.influenceFrames - this.jumpInfluenceFrames) * 0.1;
+				const influenceDecay = -(Player.influenceFrames - this.jumpInfluenceFrames) * Player.jumpForce / 50;
 				this.col.vel.y = Player.jumpForce - influenceDecay;
 				this.jumpInfluenceFrames--;
 			}
