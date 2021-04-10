@@ -74,19 +74,19 @@ BoxCollider.prototype.update = function (engine) {
   engine.canvasCTX.stroke();
 };
 
-BoxCollider.prototype.isCollidingWith = function(collider) {
+BoxCollider.prototype.isCollidingWith = function(collider, engine) {
   const x1 = this.parentObject.x + this.xOffset;
   const y1 = this.parentObject.y + this.yOffset;
   const x2 = collider.parentObject.x + collider.xOffset;
   const y2 = collider.parentObject.y + collider.yOffset;
   if (y1 + this.height >= y2 && y1 <= y2 + collider.height && x1 <= x2 + collider.width && x1 + this.width >= x2) {
     if (this.isTrigger) {
-      this.collided({ colliderA: this, colliderB: collider });
+      this.collided({ colliderA: this, colliderB: collider }, engine);
       return false;
     }
 
     if (collider.isTrigger) {
-      collider.collided({ colliderA: this, colliderB: collider });
+      collider.collided({ colliderA: this, colliderB: collider }, engine);
       return false;
     }
 
@@ -258,7 +258,6 @@ const Player = function(...params) {
   this.type = "Player";
 
   const self = this;
-  this.coinCount = 0;
   this.input = {};
   this.events = [
     {
@@ -303,18 +302,11 @@ Player.prototype.stop = function() {
   this.events.forEach(e => document.removeEventListener(e.type, e.fun));
 };
 
-Player.prototype.addCoin = function() {
-  this.coinCount++;
-};
-
-Player.prototype.getCoins = function() {
-  return this.coinCount;
-};
-
 const GameEngine = function (canvas) {
   this.canvas = canvas;
   this.canvasCTX = canvas.getContext("2d");
   this.gameObjects = [];
+  this.coinCount = 0;
   canvas.width = 600;
   canvas.height = 400;
   window.addEventListener("resize", this.resizeCanvas.bind(this), false);
@@ -323,6 +315,22 @@ const GameEngine = function (canvas) {
   this.deltaTime = 0;
   this.lastFrame = performance.now();
   this.updateInterval = setInterval(this.update.bind(this), 1);
+  this.coinCount = 0;
+  this.levelTime = 10000;
+  this.gameOverTimer = setTimeout(this.stop.bind(this), this.levelTime);
+  this.endFun = null;
+};
+
+GameEngine.prototype.onEnd = function(fun) {
+  this.endFun = fun;
+}
+
+GameEngine.prototype.addCoin = function() {
+  this.coinCount++;
+};
+
+GameEngine.prototype.getCoins = function() {
+  return this.coinCount;
 };
 
 GameEngine.prototype.clearScreen = function () {
@@ -358,7 +366,9 @@ GameEngine.prototype.resizeCanvas = function () {
 
 GameEngine.prototype.stop = function() {
   clearInterval(this.updateInterval);
+  clearTimeout(this.gameOverTimer);
   this.gameObjects.forEach(gameObject => gameObject.stop());
+  if (this.endFun) this.endFun(this);
 };
 
 const PREFABS = Object.freeze({
