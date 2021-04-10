@@ -1,6 +1,7 @@
 // API Utils
 const OPENWEATHER_KEY = "577170a37c71d9c209c23f0d23034520";
-const SCORE_API_URL = "http://10.16.6.44:8080/API";
+const SCORE_API_URL = "http://127.0.0.1:8080/API";
+const LEVEL_URL = "http://127.0.0.1:8080/levels";
 
 async function getLocation(options = {timeout: 30, maximumAge: 0, enableHighAccuracy: true}) {
   const pos = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, options)).catch(() => null);
@@ -76,8 +77,8 @@ function leaderboardLoop() {
 }
 
 // Will send leaderboard data to the server
-function sendLeaderboardData(level, time, coins, weather) {
-  
+async function sendLeaderboardData(level, time, coins, weather) {
+  await fetch(`${SCORE_API_URL}/score?name=${GlobalObject.userNick}&time=${time}&weather=[]&coins=${coins}&level=${level}`, {method:"POST"});
 }
 
 function playGame() {
@@ -86,25 +87,66 @@ function playGame() {
     GlobalObject.activeEngine = null;
     console.log("Game Over");
     if (e.getWon()) {
-      sendLeaderboardData(GlobalObject.levelData.id, e.getTime(), e.getCoins(), GlobalObject.conditionData);
+      sendLeaderboardData(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.conditionData);
+      playNextLevel();
     } else {
       playGame();
     }
   });
-  // const engine = new GameEngine(document.getElementById("mainCanvas"));
-  // engine.addGameObject(PREFABS.Platform(300, 380, 200, 10));
-  // engine.addGameObject(PREFABS.Flag(395, 370));
-  // engine.addGameObject(PREFABS.Coin(300, 350));
-  // engine.addGameObject(PREFABS.Player(205, 360));
 }
 
-// Retrieve leaderboard stats
+async function getLevelIndex() {
+  try {
+    const req = await fetch(`${LEVEL_URL}/index.json`);
+    if (!req.ok) throw new Error("fetch status not OK");
+    return await req.json();
+  } catch(e) {
+    console.log("get level index error: " + e);
+  }
+};
+
+async function getLevelData() {
+  try {
+    const req = await fetch(`${LEVEL_URL}/${GlobalObject.levelIndex[GlobalObject.currentLevelIndex]}`);
+    if (!req.ok) throw new Error("fetch status not OK");
+    return await req.json();
+  } catch(e) {
+    console.log("get level error: " + e);
+  }
+};
+
+async function playNextLevel() {
+  if (GlobalObject.currentLevelIndex !== -1) {
+    ++GlobalObject.currentLevelIndex;
+    if (GlobalObject.currentLevelIndex >= GlobalObject.levelIndex.length)
+      GlobalObject.currentLevelIndex = 0;
+    GlobalObject.levelData = await getLevelData();
+    updateLevelDataWithWeather();
+    playGame();
+  } else {
+    playGame();
+  }
+}
+
+function updateLevelDataWithWeather() {
+
+}
+
 (async () => {
   setInterval(leaderboardLoop, 5000);
-  //fillLeaderboards(1);
+  fillLeaderboards(1);
   //const location = await getLocation();
   //const weather = await getWeather(location.lat, location.long);
   //GlobalObject.conditionData = weather;
   //weatherEffects(weather);
-  playGame();
+  GlobalObject.levelIndex = await getLevelIndex();
+  if (GlobalObject.levelIndex.length > 0) { 
+    GlobalObject.currentLevelIndex = 0;
+    GlobalObject.levelData = await getLevelData();
+    updateLevelDataWithWeather();
+    playGame();
+  } else {
+    console.log("Error");
+    //Add fallback level here
+  }
 })();

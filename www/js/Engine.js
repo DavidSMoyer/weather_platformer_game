@@ -352,7 +352,7 @@ GameEngine.prototype.setWon = function() {
 };
 
 GameEngine.prototype.addCoin = function() {
-  this.coinCount++;
+  ++this.coinCount;
 };
 
 GameEngine.prototype.getCoins = function() {
@@ -386,7 +386,7 @@ GameEngine.prototype.addGameObject = function (gameObject) {
 
 GameEngine.prototype.getAllColliders = function() {
   const colliders = [];
-  this.gameObjects.forEach(gameObject => colliders.push(gameObject.getCollider()));
+  this.gameObjects.forEach(gameObject => {if (gameObject.getEnabled()) colliders.push(gameObject.getCollider());});
   return colliders;
 };
 
