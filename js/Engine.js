@@ -81,12 +81,12 @@ BoxCollider.prototype.isCollidingWith = function(collider) {
   const y2 = collider.parentObject.y + collider.yOffset;
   if (y1 + this.height >= y2 && y1 <= y2 + collider.height && x1 <= x2 + collider.width && x1 + this.width >= x2) {
     if (this.isTrigger) {
-      this.collided();
+      this.collided({ colliderA: this, colliderB: collider });
       return false;
     }
 
     if (collider.isTrigger) {
-      collider.collided();
+      collider.collided({ colliderA: this, colliderB: collider });
       return false;
     }
 
@@ -100,8 +100,8 @@ BoxCollider.prototype.onCollision = function(fun) {
   this.collisionFun = fun;
 };
 
-BoxCollider.prototype.collided = function() {
-  if (this.collisionFun) this.collisionFun();
+BoxCollider.prototype.collided = function(collision) {
+  if (this.collisionFun) this.collisionFun(collision);
 };
 
 const PhysicsBody = function (gravity = 0.00098, mass = 1) {
@@ -189,6 +189,7 @@ PhysicsBody.prototype.getOnGround = function() {
 const GameObject = function ( x = 0, y = 0, ...components ) {
   this.x = x;
   this.y = y;
+  this.enabled = true;
   this.sprite = null;
   this.collider = null;
   this.physicsBody = null;
@@ -197,6 +198,14 @@ const GameObject = function ( x = 0, y = 0, ...components ) {
   const self = this;
   components.forEach(c => self.addComponent(c));
 };
+
+GameObject.prototype.setEnabled = function(en) {
+  this.enabled = en;
+}
+
+GameObject.prototype.getEnabled = function() {
+  return this.enabled;
+}
 
 GameObject.prototype.addComponent = function(component) {
   if (component && component instanceof Component) {
@@ -226,7 +235,8 @@ GameObject.prototype.update = function (engine) {
     this.collider.update(engine);
   if (this.sprite !== null)
     this.sprite.update(engine);
-  this.components.forEach(c => c.update(engine));
+
+  this.components.forEach((c) => c.update(engine));
 };
 
 GameObject.prototype.getType = function() {
@@ -248,6 +258,7 @@ const Player = function(...params) {
   this.type = "Player";
 
   const self = this;
+  this.coinCount = 0;
   this.input = {};
   this.events = [
     {
@@ -273,17 +284,13 @@ Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function (engine) {
-  const object = this;
-
   if (this.input[39])
     this.physicsBody.xVelocity = 0.06;
   else if (this.input[37])
     this.physicsBody.xVelocity = -0.06;
 
-  if (this.input[38])
-    this.physicsBody.yVelocity = -0.06;
-  else if (this.input[40])
-    this.physicsBody.yVelocity = 0.06;
+  if (this.input[38] && this.physicsBody !== null && this.physicsBody.getOnGround())
+    this.physicsBody.yVelocity = -0.3;
 
   GameObject.prototype.update.call(this, engine);
 };
@@ -294,6 +301,14 @@ Player.prototype.getColliders = function() {
 
 Player.prototype.stop = function() {
   this.events.forEach(e => document.removeEventListener(e.type, e.fun));
+};
+
+Player.prototype.addCoin = function() {
+  this.coinCount++;
+};
+
+Player.prototype.getCoins = function() {
+  return this.coinCount;
 };
 
 const GameEngine = function (canvas) {
@@ -321,7 +336,7 @@ GameEngine.prototype.update = function () {
   this.deltaTime = now - this.lastFrame;
   this.lastFrame = now;
   this.clearScreen();
-  this.gameObjects.forEach((gameObject) => gameObject.update(engine));
+  this.gameObjects.forEach((gameObject) => { if(gameObject.getEnabled()) gameObject.update(engine)});
 };
 
 GameEngine.prototype.addGameObject = function (gameObject) {
@@ -345,3 +360,32 @@ GameEngine.prototype.stop = function() {
   clearInterval(this.updateInterval);
   this.gameObjects.forEach(gameObject => gameObject.stop());
 };
+
+const PREFABS = Object.freeze({
+  Player: function(x, y) {
+    return new Player(x, y, new BoxCollider(10, 10, 0,0,0.001), new PhysicsBody())
+  },
+  Coin: function(x, y) {
+    const collider = new BoxCollider(10, 10,0,0,0,0,true);
+    collider.onCollision(c => {
+      if (c.colliderA.parentObject instanceof Player) {
+        c.colliderA.parentObject.addCoin();
+        c.colliderB.parentObject.setEnabled(false);
+      }
+    });
+    return new GameObject(x, y, collider);
+  },
+  Flag: function(x, y) {
+    const collider = new BoxCollider(10, 10,0,0,0,0,true);
+    collider.onCollision(c => {
+      if (c.colliderA.parentObject instanceof Player) {
+        c.colliderA.parentObject.addCoin();
+        c.colliderB.parentObject.setEnabled(false);
+      }
+    });
+    return new GameObject(x, y, collider);
+  },
+  Platform: function(x, y, width, height, bounce = false) {
+    return new GameObject(x, y, new BoxCollider(width, height, 0,0,0,bounce?1:0));
+  },
+});

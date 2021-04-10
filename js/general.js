@@ -82,10 +82,10 @@ function sendLeaderboardData(level, time, coins, weather) {
 
 function playGame() {
   const engine = new GameEngine(document.getElementById("mainCanvas"));
-  engine.addGameObject(new GameObject(300, 380, new BoxCollider(200, 10)));
-  engine.addGameObject(new GameObject(395, 370, new BoxCollider(10, 10)));
-  engine.addGameObject(new GameObject(300, 350, new BoxCollider(10, 10)));
-  engine.addGameObject(new Player(205, 360, new BoxCollider(10, 10, 0,0,0.001), new PhysicsBody(0.00098)));
+  engine.addGameObject(PREFABS.Platform(300, 380, 200, 10));
+  engine.addGameObject(PREFABS.Platform(395, 370, 10, 10));
+  engine.addGameObject(PREFABS.Coin(300, 350));
+  engine.addGameObject(PREFABS.Player(205, 360));
 }
 
 // Retrieve leaderboard stats
