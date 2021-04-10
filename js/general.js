@@ -84,10 +84,11 @@ function playGame() {
   GlobalObject.activeEngine = new GameEngine(document.getElementById("mainCanvas"), GlobalObject.levelData);
   GlobalObject.activeEngine.onEnd(e => {
     GlobalObject.activeEngine = null;
+    console.log("Game Over");
     if (e.getWon()) {
       sendLeaderboardData(GlobalObject.levelData.id, e.getTime(), e.getCoins(), GlobalObject.conditionData);
     } else {
-      GlobalObject.activeEngine = new GameEngine(document.getElementById("mainCanvas"), GlobalObject.levelData);
+      playGame();
     }
   });
   // const engine = new GameEngine(document.getElementById("mainCanvas"));

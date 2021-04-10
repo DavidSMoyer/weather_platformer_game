@@ -283,6 +283,10 @@ Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function (engine) {
+  if (this.y > 700) {
+    engine.stop();
+    return;
+  }
   if (this.input[39])
     this.physicsBody.xVelocity = 0.06;
   else if (this.input[37])
@@ -340,7 +344,7 @@ GameEngine.prototype.getWon = function() {
 
 GameEngine.prototype.getTime = function() {
   if (this.time) return this.time;
-  return performance.now - this.gameStartTime;
+  return performance.now() - this.gameStartTime;
 };
 
 GameEngine.prototype.setWon = function() {
@@ -361,12 +365,14 @@ GameEngine.prototype.clearScreen = function () {
 };
 
 GameEngine.prototype.update = function () {
-  if (performance.now - this.gameStartTime >= this.levelTime) {
+  const engine = this;
+  const now = performance.now();
+
+  if (now - this.gameStartTime >= this.levelTime) {
     this.stop();
     return;
   }
-  const engine = this;
-  const now = performance.now();
+
   this.deltaTime = now - this.lastFrame;
   this.lastFrame = now;
   this.clearScreen();
