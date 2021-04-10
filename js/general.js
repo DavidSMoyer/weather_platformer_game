@@ -81,11 +81,20 @@ function sendLeaderboardData(level, time, coins, weather) {
 }
 
 function playGame() {
-  const engine = new GameEngine(document.getElementById("mainCanvas"));
-  engine.addGameObject(PREFABS.Platform(300, 380, 200, 10));
-  engine.addGameObject(PREFABS.Platform(395, 370, 10, 10));
-  engine.addGameObject(PREFABS.Coin(300, 350));
-  engine.addGameObject(PREFABS.Player(205, 360));
+  GlobalObject.activeEngine = new GameEngine(document.getElementById("mainCanvas"), GlobalObject.levelData);
+  GlobalObject.activeEngine.onEnd(e => {
+    GlobalObject.activeEngine = null;
+    if (e.getWon()) {
+      sendLeaderboardData(GlobalObject.levelData.id, e.getTime(), e.getCoins(), GlobalObject.conditionData);
+    } else {
+      GlobalObject.activeEngine = new GameEngine(document.getElementById("mainCanvas"), GlobalObject.levelData);
+    }
+  });
+  // const engine = new GameEngine(document.getElementById("mainCanvas"));
+  // engine.addGameObject(PREFABS.Platform(300, 380, 200, 10));
+  // engine.addGameObject(PREFABS.Flag(395, 370));
+  // engine.addGameObject(PREFABS.Coin(300, 350));
+  // engine.addGameObject(PREFABS.Player(205, 360));
 }
 
 // Retrieve leaderboard stats

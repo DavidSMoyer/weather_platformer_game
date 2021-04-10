@@ -151,7 +151,7 @@ PhysicsBody.prototype.update = function (engine) {
   this.inAir = true;
   engine.getAllColliders().forEach(collider => {
     if (collider.parentObject !== self.parentObject) {
-      const collision = self.parentObject.getCollider().isCollidingWith(collider);
+      const collision = self.parentObject.getCollider().isCollidingWith(collider, engine);
       if (collision) {
         this.inAir = false;
         if( Math.abs((collision.colliderA.parentObject.y + collision.colliderA.yOffset + collision.colliderA.height) - (collision.colliderB.parentObject.y + collision.colliderB.yOffset)) < collisionTolerance) { //Bottom Collision
@@ -302,7 +302,7 @@ Player.prototype.stop = function() {
   this.events.forEach(e => document.removeEventListener(e.type, e.fun));
 };
 
-const GameEngine = function (canvas) {
+const GameEngine = function (canvas, levelData) {
   this.canvas = canvas;
   this.canvasCTX = canvas.getContext("2d");
   this.gameObjects = [];
@@ -316,14 +316,36 @@ const GameEngine = function (canvas) {
   this.lastFrame = performance.now();
   this.updateInterval = setInterval(this.update.bind(this), 1);
   this.coinCount = 0;
-  this.levelTime = 10000;
-  this.gameOverTimer = setTimeout(this.stop.bind(this), this.levelTime);
   this.endFun = null;
+  this.hasWon = false;
+  if (levelData) {
+    this.levelTime = levelData.time;
+    const self = this;
+    levelData.objects.forEach(obj => {
+      self.addGameObject(PREFABS[obj.type](...obj.params));
+    });
+  } else {
+    this.levelTime = 10000;
+  }
+  this.gameStartTime = performance.now();
 };
 
 GameEngine.prototype.onEnd = function(fun) {
   this.endFun = fun;
-}
+};
+
+GameEngine.prototype.getWon = function() {
+  return this.hasWon;
+};
+
+GameEngine.prototype.getTime = function() {
+  if (this.time) return this.time;
+  return performance.now - this.gameStartTime;
+};
+
+GameEngine.prototype.setWon = function() {
+  this.hasWon = true;
+};
 
 GameEngine.prototype.addCoin = function() {
   this.coinCount++;
@@ -339,6 +361,10 @@ GameEngine.prototype.clearScreen = function () {
 };
 
 GameEngine.prototype.update = function () {
+  if (performance.now - this.gameStartTime >= this.levelTime) {
+    this.stop();
+    return;
+  }
   const engine = this;
   const now = performance.now();
   this.deltaTime = now - this.lastFrame;
@@ -366,8 +392,8 @@ GameEngine.prototype.resizeCanvas = function () {
 
 GameEngine.prototype.stop = function() {
   clearInterval(this.updateInterval);
-  clearTimeout(this.gameOverTimer);
   this.gameObjects.forEach(gameObject => gameObject.stop());
+  this.time = performance.now - this.gameStartTime;
   if (this.endFun) this.endFun(this);
 };
 
@@ -388,8 +414,10 @@ const PREFABS = Object.freeze({
   Flag: function(x, y) {
     const collider = new BoxCollider(10, 10,0,0,0,0,true);
     collider.onCollision((c, e) => {
-      if (c.colliderA.parentObject instanceof Player)
+      if (c.colliderA.parentObject instanceof Player) {
+        e.setWon();
         e.stop();
+      }
     });
     return new GameObject(x, y, collider);
   },
