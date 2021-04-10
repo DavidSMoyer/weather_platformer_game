@@ -78,7 +78,14 @@ function leaderboardLoop() {
 
 // Will send leaderboard data to the server
 async function sendLeaderboardData(level, time, coins, weather) {
-  await fetch(`${SCORE_API_URL}/score?name=${GlobalObject.userNick}&time=${time}&weather=[]&coins=${coins}&level=${level}`, {method:"POST"});
+  try {
+    if (GlobalObject.currentLevelIndex !== -1) {
+      const req = await fetch(`${SCORE_API_URL}/score?name=${GlobalObject.userNick}&time=${time}&weather=[]&coins=${coins}&level=${level}`, {method:"POST"});
+      if (!req.ok) throw new Error("fetch status not OK");
+    }
+  } catch(e) {
+    console.log("Score post error: " + e);
+  }
 }
 
 function playGame() {
