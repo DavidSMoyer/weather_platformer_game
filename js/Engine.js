@@ -100,8 +100,8 @@ BoxCollider.prototype.onCollision = function(fun) {
   this.collisionFun = fun;
 };
 
-BoxCollider.prototype.collided = function(collision) {
-  if (this.collisionFun) this.collisionFun(collision);
+BoxCollider.prototype.collided = function(collision, engine) {
+  if (this.collisionFun) this.collisionFun(collision, engine);
 };
 
 const PhysicsBody = function (gravity = 0.00098, mass = 1) {
@@ -377,9 +377,9 @@ const PREFABS = Object.freeze({
   },
   Coin: function(x, y) {
     const collider = new BoxCollider(10, 10,0,0,0,0,true);
-    collider.onCollision(c => {
+    collider.onCollision((c, e) => {
       if (c.colliderA.parentObject instanceof Player) {
-        c.colliderA.parentObject.addCoin();
+        e.addCoin();
         c.colliderB.parentObject.setEnabled(false);
       }
     });
@@ -387,11 +387,9 @@ const PREFABS = Object.freeze({
   },
   Flag: function(x, y) {
     const collider = new BoxCollider(10, 10,0,0,0,0,true);
-    collider.onCollision(c => {
-      if (c.colliderA.parentObject instanceof Player) {
-        c.colliderA.parentObject.addCoin();
-        c.colliderB.parentObject.setEnabled(false);
-      }
+    collider.onCollision((c, e) => {
+      if (c.colliderA.parentObject instanceof Player)
+        e.stop();
     });
     return new GameObject(x, y, collider);
   },
