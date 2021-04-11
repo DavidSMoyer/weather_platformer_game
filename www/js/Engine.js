@@ -13,35 +13,53 @@ Component.prototype.getType = function() {
 
 Component.prototype.update = function() { };
 
-const Sprite = function (imgSrc, width, height, animDelay) {
+//Speed in FPS
+const Sprite = function (imgSrc, width = 10, height = 10, speed = 1, xOffset = 0, yOffset = 0) {
   Component.call(this, "Sprite");
-  this.imgElm = document.createElement("img");
-  this.srcList = [...imgSrc];
-  this.imgElm.src = this.srcList[0];
-  this.width = width;
-  this.height = height;
-  this.animDelay = animDelay;
-  this.animMaxDelay = animMaxDelay;
-  this.frame = 0;
-  this.paused = !Array.isArray(imgSrc);
+  this.changeAnimation(imgSrc, width, height, speed, xOffset, yOffset);
+  this.paused = false;
 };
 
 Sprite.prototype = Object.create(Component.prototype);
 Sprite.prototype.constructor = Sprite;
 
+Sprite.prototype.changeAnimation = function(imgSrc, width = null, height = null, speed = null, xOffset = null, yOffset = null) {
+  if (Array.isArray(imgSrc))
+    this.srcList = imgSrc;
+  else
+    this.srcList = [imgSrc];
+
+  this.frames = [];
+  this.srcList.forEach(img => {
+    const elm = document.createElement("img");
+    elm.src = img;
+    this.frames.push(elm);
+  });
+
+  this.frameTime = 1000/(speed === null?this.speed:speed);
+  this.width = width === null?this.width:width;
+  this.height = height === null?this.height:height;
+  this.xOffset = xOffset === null?this.xOffset:(xOffset - (this.width/2));
+  this.yOffset = yOffset === null?this.yOffset:(yOffset - (this.height/2));
+  this.frameIndex = 0;
+  this.lastFrame = performance.now();
+};
+
 Sprite.prototype.update = function (engine) {
-  // if (!this.paused) {
-  //   this.animDelay--;
-  //   if (this.animDelay > 0) break;
-  //   this.animDelay = this.animMaxDelay;
-  //   this.frame++;
-  //   if (this.frame >= this.srcList.length) this.frame = 0;
-  //   this.imgElm.src = this.srcList[this.frame];
-  // }
+  if (!this.paused) {
+    const now = performance.now();
+    if (now - this.lastFrame > this.frameTime) {
+      ++this.frameIndex;
+      this.lastFrame = now;
+      if (this.frameIndex >= this.frames.length)
+        this.frameIndex = 0;
+    }
+  }
+
   engine.canvasCTX.drawImage(
-    this.imgElm,
-    this.parentObject.x,
-    this.parentObject.y,
+    this.frames[this.frameIndex],
+    this.parentObject.x + this.xOffset,
+    this.parentObject.y + this.yOffset,
     this.width,
     this.height
   );
@@ -113,10 +131,19 @@ const PhysicsBody = function (gravity = 0.00098, mass = 1) {
   this.xFriction = 0;
   this.yFriction = 0;
   this.inAir = true;
+  this.collidingSide = PhysicsBody.SIDE.NONE;
 };
 
 PhysicsBody.prototype = Object.create(Component.prototype);
 PhysicsBody.prototype.constructor = PhysicsBody;
+
+PhysicsBody.SIDE = Object.freeze({
+  "NONE": 0,
+  "TOP": 1,
+  "BOTTOM": 2,
+  "LEFT": 3,
+  "RIGHT": 4,
+});
 
 PhysicsBody.prototype.update = function (engine) {
   const collisionTolerance = 2;
@@ -149,33 +176,39 @@ PhysicsBody.prototype.update = function (engine) {
 
   //Check Collisions
   this.inAir = true;
+  this.collidingSide = PhysicsBody.SIDE.NONE;
   engine.getAllColliders().forEach(collider => {
     if (collider.parentObject !== self.parentObject) {
       const collision = self.parentObject.getCollider().isCollidingWith(collider, engine);
       if (collision) {
         this.inAir = false;
-        if( Math.abs((collision.colliderA.parentObject.y + collision.colliderA.yOffset + collision.colliderA.height) - (collision.colliderB.parentObject.y + collision.colliderB.yOffset)) < collisionTolerance) { //Bottom Collision
-          self.xFriction = collision.colliderA.friction + collision.colliderB.friction;
-          self.yVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
-          collision.colliderA.parentObject.y = -collision.colliderA.yOffset - collision.colliderA.height + (collision.colliderB.parentObject.y + collision.colliderB.yOffset);
-        }
 
         if( Math.abs((collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height) - (collision.colliderA.parentObject.y + collision.colliderA.yOffset)) < collisionTolerance) { //Top Collision
           self.xFriction = collision.colliderA.friction + collision.colliderB.friction;
           self.yVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
           collision.colliderA.parentObject.y = -collision.colliderA.yOffset + (collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height);
+          this.collidingSide = PhysicsBody.SIDE.TOP;
         }
 
         if( Math.abs((collision.colliderA.parentObject.x + collision.colliderA.xOffset + collision.colliderA.width) - (collision.colliderB.parentObject.x + collision.colliderB.xOffset)) < collisionTolerance) { //Left Collision
           self.yFriction = collision.colliderA.friction + collision.colliderB.friction;
           self.xVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
           collision.colliderA.parentObject.x = -collision.colliderA.xOffset - collision.colliderA.width + (collision.colliderB.parentObject.x + collision.colliderB.xOffset);
+          this.collidingSide = PhysicsBody.SIDE.LEFT;
         }
 
         if( Math.abs((collision.colliderB.parentObject.x + collision.colliderB.xOffset + collision.colliderB.width) - (collision.colliderA.parentObject.x + collision.colliderA.xOffset)) < collisionTolerance) { //Right Collision
           self.yFriction = collision.colliderA.friction + collision.colliderB.friction;
           self.xVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
           collision.colliderA.parentObject.x = -collision.colliderA.xOffset + (collision.colliderB.parentObject.x + collision.colliderB.xOffset + collision.colliderB.width);
+          this.collidingSide = PhysicsBody.SIDE.RIGHT;
+        }
+
+        if( Math.abs((collision.colliderA.parentObject.y + collision.colliderA.yOffset + collision.colliderA.height) - (collision.colliderB.parentObject.y + collision.colliderB.yOffset)) < collisionTolerance) { //Bottom Collision
+          self.xFriction = collision.colliderA.friction + collision.colliderB.friction;
+          self.yVelocity *= -1 * (collision.colliderA.bounciness + collision.colliderB.bounciness);
+          collision.colliderA.parentObject.y = -collision.colliderA.yOffset - collision.colliderA.height + (collision.colliderB.parentObject.y + collision.colliderB.yOffset);
+          this.collidingSide = PhysicsBody.SIDE.BOTTOM;
         }
       }
     }
@@ -184,6 +217,10 @@ PhysicsBody.prototype.update = function (engine) {
 
 PhysicsBody.prototype.getOnGround = function() {
   return !this.inAir;
+};
+
+PhysicsBody.prototype.getCollidingSide = function() {
+  return this.collidingSide;
 };
 
 const GameObject = function ( x = 0, y = 0, ...components ) {
@@ -231,7 +268,7 @@ GameObject.prototype.addComponent = function(component) {
 GameObject.prototype.update = function (engine) {
   if (this.physicsBody !== null)
     this.physicsBody.update(engine);
-  if (this.collider !== null)
+  if (this.collider !== null && this.sprite === null)
     this.collider.update(engine);
   if (this.sprite !== null)
     this.sprite.update(engine);
@@ -326,7 +363,7 @@ const GameEngine = function (canvas, levelData) {
     this.levelTime = levelData.time;
     const self = this;
     levelData.objects.forEach(obj => {
-      self.addGameObject(PREFABS[obj.type](...obj.params));
+      self.addGameObject(GameEngine.PREFABS[obj.type](...obj.params));
     });
   } else {
     this.levelTime = 10000;
@@ -403,29 +440,29 @@ GameEngine.prototype.stop = function() {
   if (this.endFun) this.endFun(this);
 };
 
-const PREFABS = Object.freeze({
+GameEngine.PREFABS = Object.freeze({
   Player: function(x, y) {
-    return new Player(x, y, new BoxCollider(10, 10, 0,0,0.001), new PhysicsBody())
+    return new Player(x, y, new BoxCollider(20,50,0,0,0.001), new PhysicsBody(), new Sprite(["images/walk/1.png", "images/walk/2.png", "images/walk/3.png" , "images/walk/4.png", "images/walk/5.png", "images/walk/6.png", "images/walk/7.png"], 20, 50, 8));
   },
   Coin: function(x, y) {
-    const collider = new BoxCollider(10, 10,0,0,0,0,true);
+    const collider = new BoxCollider(15.5,15.5,0,0,0,0,true);
     collider.onCollision((c, e) => {
       if (c.colliderA.parentObject instanceof Player) {
         e.addCoin();
         c.colliderB.parentObject.setEnabled(false);
       }
     });
-    return new GameObject(x, y, collider);
+    return new GameObject(x, y, collider, new Sprite(["images/coin/1.png", "images/coin/2.png", "images/coin/3.png" , "images/coin/4.png", "images/coin/5.png", "images/coin/6.png", "images/coin/7.png"], 15.5, 15.5, 7));
   },
   Flag: function(x, y) {
-    const collider = new BoxCollider(10, 10,0,0,0,0,true);
+    const collider = new BoxCollider(16,39,0,0,0,0,true);
     collider.onCollision((c, e) => {
       if (c.colliderA.parentObject instanceof Player) {
         e.setWon();
         e.stop();
       }
     });
-    return new GameObject(x, y, collider);
+    return new GameObject(x, y, collider, new Sprite("images/flag.png", 16, 39));
   },
   Platform: function(x, y, width, height, bounce = false) {
     return new GameObject(x, y, new BoxCollider(width, height, 0,0,0,bounce?1:0));

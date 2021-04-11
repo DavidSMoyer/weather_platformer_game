@@ -5,11 +5,11 @@
   "objects": [
     {
       "type": "Player",
-      "params": [205, 360]
+      "params": [205, 330]
     },
     {
       "type": "Flag",
-      "params": [395, 370]
+      "params": [395, 355]
     },
     {
       "type": "Platform",
@@ -17,7 +17,11 @@
     },
     {
       "type": "Coin",
-      "params": [300, 350]
+      "params": [315, 350]
+    },
+    {
+      "type": "Coin",
+      "params": [260, 350]
     }
   ]
 }
