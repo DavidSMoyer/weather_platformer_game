@@ -429,15 +429,18 @@ const GameEngine = function (canvas, levelData) {
   this.coinCount = 0;
   canvas.width = 600;
   canvas.height = 400;
-  window.addEventListener("resize", this.resizeCanvas.bind(this), false);
-  this.resizeCanvas();
-  this.clearScreen();
   this.deltaTime = 0;
   this.lastFrame = performance.now();
   this.updateInterval = setInterval(this.update.bind(this), 1);
   this.coinCount = 0;
   this.endFun = null;
   this.hasWon = false;
+  this.background = null;
+
+  window.addEventListener("resize", this.resizeCanvas.bind(this), false);
+  this.resizeCanvas();
+  this.clearScreen();
+
   if (levelData) {
     this.levelTime = levelData.time;
     const self = this;
@@ -478,6 +481,8 @@ GameEngine.prototype.getCoins = function() {
 GameEngine.prototype.clearScreen = function () {
   this.canvasCTX.fillStyle = "#AAAAAA";
   this.canvasCTX.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  if (this.background !== null)
+    this.background.update(this);
 };
 
 GameEngine.prototype.update = function () {
@@ -496,8 +501,12 @@ GameEngine.prototype.update = function () {
 };
 
 GameEngine.prototype.addGameObject = function (gameObject) {
-  if (gameObject && gameObject instanceof GameObject)
-    this.gameObjects.push(gameObject);
+  if (gameObject && gameObject instanceof GameObject) {
+    if (gameObject.getType() === "Background")
+      this.background = gameObject;
+    else
+      this.gameObjects.push(gameObject);
+  }
 };
 
 GameEngine.prototype.getAllColliders = function() {
@@ -603,6 +612,8 @@ GameEngine.PREFABS = Object.freeze({
     return new GameObject(x, y, new BoxCollider(width, height, 0,0,[0,0,0,0], [0,0,0,0]));
   },
   Background: function(image) {
-    return new GameObject(300,200, new Sprite(image, 600, 400, 1));
+    const obj = new GameObject(300,200, new Sprite(image, 600, 400, 1));
+    obj.type = "Background";
+    return obj;
   },
 });
