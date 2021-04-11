@@ -502,7 +502,7 @@ GameEngine.prototype.addGameObject = function (gameObject) {
 
 GameEngine.prototype.getAllColliders = function() {
   const colliders = [];
-  this.gameObjects.forEach(gameObject => {if (gameObject.getEnabled()) colliders.push(gameObject.getCollider());});
+  this.gameObjects.forEach(gameObject => {if (gameObject.getEnabled() && gameObject.getCollider() !== null) colliders.push(gameObject.getCollider());});
   return colliders;
 };
 
@@ -520,7 +520,7 @@ GameEngine.prototype.stop = function() {
 };
 
 GameEngine.PREFABS = Object.freeze({
-  Player: function(x, y, floorSlippery = false, wallsSlippery = false) {
+  Player: function(x, y, floorSlippery = false, wallsSlippery = false, floorsHot = false) {
     const animations = [
       {
         frames: ["images/player/idle/1.png", "images/player/idle/2.png"],
@@ -577,7 +577,7 @@ GameEngine.PREFABS = Object.freeze({
         speed: 3,
       },
     ];
-    return new Player(x, y, new BoxCollider(20,50,0,0,[floorSlippery?0.00025:0.001, 0.001, wallsSlippery?0.0005:0.00097, wallsSlippery?0.0005:0.00097]), new PhysicsBody(), new Sprite(["images/player/idle/1.png", "images/player/idle/2.png"], 20, 50, 2), new Animator(animations));
+    return new Player(x, y, new BoxCollider(20,50,0,0,[floorSlippery?0.00025:0.001, 0.001, wallsSlippery?0.0005:0.00097, wallsSlippery?0.0005:0.00097], floorsHot?[1,1,0,0]:[0,0,0,0]), new PhysicsBody(), new Sprite(["images/player/idle/1.png", "images/player/idle/2.png"], 20, 50, 2), new Animator(animations));
   },
   Coin: function(x, y) {
     const collider = new BoxCollider(15.5,15.5,0,0,0,0,true);
@@ -600,6 +600,9 @@ GameEngine.PREFABS = Object.freeze({
     return new GameObject(x, y, collider, new Sprite("images/flag.png", 16, 39));
   },
   Platform: function(x, y, width, height, bounce = false) {
-    return new GameObject(x, y, new BoxCollider(width, height, 0,0,[0,0,0,0],bounce?[1,1,0,0]:[0,0,0,0]));
+    return new GameObject(x, y, new BoxCollider(width, height, 0,0,[0,0,0,0], [0,0,0,0]));
+  },
+  Background: function(image) {
+    return new GameObject(300,200, new Sprite(image, 600, 400, 1));
   },
 });

@@ -4,6 +4,10 @@
   "time": 10000,
   "objects": [
     {
+      "type": "Background",
+      "params": ["images/backgrounds/sky.png"]
+    },
+    {
       "type": "Player",
       "params": [205, 330]
     },
