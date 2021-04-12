@@ -10,7 +10,7 @@ function displayError() {
   errorTimeout = setTimeout(() => errorPopup.classList.add("hidden"), 2500);
 }
 
-async function showNickPopup() {
+function showNickPopup() {
   return new Promise((resolve, reject) => {
     const popup = document.querySelector("#popup");
     const nickForm = document.querySelector("#nickname");
@@ -30,7 +30,7 @@ async function showNickPopup() {
   });
 }
 
-async function showLevelPopup(level, time, coins, coinTotal, weather) {
+function showLevelPopup(level, time, coins, coinTotal, weather) {
   return new Promise((resolve, reject) => {
     resolve();
   });

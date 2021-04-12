@@ -2,6 +2,7 @@
   "id": 1,
   "name": "First!",
   "time": 10000,
+  "coinTotal": 2,
   "objects": [
     {
       "type": "Background",
@@ -18,10 +19,6 @@
     {
       "type": "Platform",
       "params": [300, 380, 200, 10]
-    },
-    {
-      "type": "Platform",
-      "params": [300, 300, 50, 50]
     },
     {
       "type": "Coin",
