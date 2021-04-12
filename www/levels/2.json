@@ -1,0 +1,40 @@
+{
+  "id": 2,
+  "name": "First!",
+  "time": 10000,
+  "coinTotal": 2,
+  "objects": [
+    {
+      "type": "Background",
+      "params": ["images/backgrounds/sky.png"]
+    },
+    {
+      "type": "Player",
+      "params": [125, 250]
+    },
+    {
+      "type": "Flag",
+      "params": [475, 275]
+    },
+    {
+      "type": "Platform",
+      "params": [150, 300, 100, 10]
+    },
+    {
+      "type": "Platform",
+      "params": [300, 325, 150, 10]
+    },
+    {
+      "type": "Platform",
+      "params": [450, 300, 100, 10]
+    },
+    {
+      "type": "Coin",
+      "params": [150, 275]
+    },
+    {
+      "type": "Coin",
+      "params": [300, 300]
+    }
+  ]
+}
