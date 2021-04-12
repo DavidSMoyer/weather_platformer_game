@@ -171,7 +171,6 @@ PhysicsBody.SIDE = Object.freeze({
 });
 
 PhysicsBody.prototype.update = function (engine) {
-  const collisionTolerance = 5;
   const self = this;
 
   //Update Friction
@@ -247,8 +246,10 @@ PhysicsBody.prototype.update = function (engine) {
     }
   });
 
-  if (bottomCollision) this.collidingSide = PhysicsBody.SIDE.BOTTOM;
-  if (topCollision) this.inAir = true;
+  if (bottomCollision)
+    this.collidingSide = PhysicsBody.SIDE.BOTTOM;
+  if (topCollision)
+    this.inAir = true;
 };
 
 PhysicsBody.prototype.getOnGround = function() {
@@ -288,19 +289,23 @@ GameObject.prototype.addComponent = function(component) {
       case "Sprite":
         this.sprite = component;
         break;
+
       case "Animator":
         if (this.sprite != null) {
           component.setSprite(this.sprite);
           this.animator = component;
         }
         break;
+
       case "Collider":
         this.collider = component;
         break;
+
       case "PhysicsBody":
         if (this.collider != null)
           this.physicsBody = component;
         break;
+
       default:
         this.components.push(component);
         break;
