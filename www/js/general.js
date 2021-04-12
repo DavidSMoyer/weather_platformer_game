@@ -88,10 +88,6 @@ async function sendLeaderboardData(level, time, coins, weather) {
   }
 }
 
-async function showGameOverPopup() {
-
-}
-
 function showLeaderboard() {
   document.querySelector("#leaderboard-left").classList.remove("hidden");
   document.querySelector("#leaderboard-right").classList.remove("hidden");
