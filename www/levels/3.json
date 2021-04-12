@@ -5,10 +5,6 @@
   "coinTotal": 3,
   "objects": [
     {
-      "type": "Background",
-      "params": ["images/backgrounds/sky.png"]
-    },
-    {
       "type": "Player",
       "params": [100, 250]
     },
