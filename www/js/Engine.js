@@ -434,7 +434,10 @@ const GameEngine = function (canvas, levelData) {
   canvas.height = 400;
   this.deltaTime = 0;
   this.lastFrame = performance.now();
-  this.updateInterval = setInterval(this.update.bind(this), 1);
+  this.updateIntervals = [setInterval(this.update.bind(this), 4)];
+  setTimeout((() => this.updateIntervals.push(setInterval(this.update.bind(this))).bind(this), 4), 1);
+  setTimeout((() => this.updateIntervals.push(setInterval(this.update.bind(this))).bind(this), 4), 2);
+  setTimeout((() => this.updateIntervals.push(setInterval(this.update.bind(this))).bind(this), 4), 3);
   this.coinCount = 0;
   this.endFun = null;
   this.hasWon = false;
@@ -525,7 +528,7 @@ GameEngine.prototype.resizeCanvas = function () {
 };
 
 GameEngine.prototype.stop = function() {
-  clearInterval(this.updateInterval);
+  this.updateIntervals.forEach(i => clearInterval(i));
   this.gameObjects.forEach(gameObject => gameObject.stop());
   this.time = performance.now - this.gameStartTime;
   if (this.endFun) this.endFun(this);
