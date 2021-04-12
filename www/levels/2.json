@@ -5,10 +5,6 @@
   "coinTotal": 2,
   "objects": [
     {
-      "type": "Background",
-      "params": ["images/backgrounds/sky.png"]
-    },
-    {
       "type": "Player",
       "params": [125, 250]
     },
@@ -18,15 +14,15 @@
     },
     {
       "type": "Platform",
-      "params": [150, 300, 100, 10]
+      "params": [150, 300, 100, 10, "images/platforms/basic.png"]
     },
     {
       "type": "Platform",
-      "params": [300, 325, 150, 10]
+      "params": [300, 325, 150, 10, "images/platforms/basic.png"]
     },
     {
       "type": "Platform",
-      "params": [450, 300, 100, 10]
+      "params": [450, 300, 100, 10, "images/platforms/basic.png"]
     },
     {
       "type": "Coin",
