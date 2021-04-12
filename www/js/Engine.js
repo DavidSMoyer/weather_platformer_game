@@ -483,7 +483,7 @@ GameEngine.prototype.getCoins = function() {
 
 GameEngine.prototype.clearScreen = function () {
   this.canvasCTX.fillStyle = "#AAAAAA";
-  this.canvasCTX.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  this.canvasCTX.clearRect(0, 0, this.canvas.width, this.canvas.height);
   if (this.background !== null)
     this.background.update(this);
 };
