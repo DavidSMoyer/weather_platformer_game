@@ -40,6 +40,15 @@ body.night {
   background-image: linear-gradient(rgba(62, 26, 92, 0.35), rgba(0, 0, 0, 0.5));
 }
 
+h1 {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 2;
+  -webkit-text-stroke: 1px white;
+  font-size: 40px;
+}
+
 ul {
   list-style: none;
   padding: 0;
