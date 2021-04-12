@@ -5,7 +5,7 @@ const LEVEL_URL = "http://127.0.0.1:8080/levels";
 
 async function getLocation(options = {timeout: 30, maximumAge: 0, enableHighAccuracy: true}) {
   const pos = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, options)).catch(() => null);
-  if (pos === null) return {lat: Math.random() * 179, long: Math.random() * 179};
+  if (pos === null) return {lat: 180 - (Math.random() * 360), long: 90 - (Math.random() * 180)};
   return {lat: pos.coords.latitude, long: pos.coords.longitude};
 }
 
@@ -88,13 +88,30 @@ async function sendLeaderboardData(level, time, coins, weather) {
   }
 }
 
+async function showGameOverPopup() {
+
+}
+
+function showLeaderboard() {
+  
+}
+
+function hideLeaderboard() {
+  
+}
+
 function playGame() {
   GlobalObject.activeEngine = new GameEngine(document.getElementById("mainCanvas"), GlobalObject.levelData);
   GlobalObject.activeEngine.onEnd(e => {
     GlobalObject.activeEngine = null;
     console.log("Game Over");
     if (e.getWon()) {
-      sendLeaderboardData(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.conditionData);
+      (async () => {
+        showLeaderboard();
+        await sendLeaderboardData(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.conditionData);
+        fillLeaderboard(GlobalObject.levelData.id);
+      })();
+
       playNextLevel();
     } else {
       playGame();
@@ -140,20 +157,24 @@ function updateLevelDataWithWeather() {
 }
 
 (async () => {
-  setInterval(leaderboardLoop, 5000);
-  fillLeaderboards(1);
-  //const location = await getLocation();
-  //const weather = await getWeather(location.lat, location.long);
-  //GlobalObject.conditionData = weather;
-  //weatherEffects(weather);
+  const nick = showNickPopup();
+  //setInterval(leaderboardLoop, 5000);
+  //fillLeaderboards(1);
+
+  const location = await getLocation();
+  const weather = await getWeather(location.lat, location.long);
+  GlobalObject.conditionData = weather;
+  weatherEffects(weather);
   GlobalObject.levelIndex = await getLevelIndex();
   if (GlobalObject.levelIndex.length > 0) { 
     GlobalObject.currentLevelIndex = 0;
     GlobalObject.levelData = await getLevelData();
-    updateLevelDataWithWeather();
-    playGame();
   } else {
     console.log("Error");
     //Add fallback level here
   }
+
+  updateLevelDataWithWeather();
+  GlobalObject.userNick = await nick;
+  playGame();
 })();
