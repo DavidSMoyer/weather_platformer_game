@@ -44,7 +44,7 @@ async function fillLeaderboard(board, level, weather, title) {
       throw new Error("Fetch status not OK");
     const scores = await req.json();
     board.innerHTML = scores.reduce((html, score, index) => html + `
-      <li>${index + 1}. ${score.nick} - ${(score.time / 60).toFixed(2)}</li>
+      <li>${index + 1}. ${score.nick} - ${(score.time / 1000).toFixed(2)}</li>
     `, `<li class="list-head">${title} Leaderboard</li>`) + "<li></li>".repeat(10 - scores.length);
   } catch(e) {
     console.log("Leaderboard Fill Error: " + e);
