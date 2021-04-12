@@ -171,7 +171,7 @@ PhysicsBody.SIDE = Object.freeze({
 });
 
 PhysicsBody.prototype.update = function (engine) {
-  const collisionTolerance = 3;
+  const collisionTolerance = 5;
   const self = this;
 
   //Update Friction
