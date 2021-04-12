@@ -114,7 +114,7 @@ function playGame() {
       (async () => {
         showLeaderboard();
         await sendLeaderboardData(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.conditionData);
-        fillLeaderboard(GlobalObject.levelData.id);
+        fillLeaderboards(GlobalObject.levelData.id);
       })();
 
       showLevelPopup(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.levelData.coinTotal, GlobalObject.conditionData)
@@ -186,8 +186,203 @@ function updateLevelDataWithWeather() {
     GlobalObject.currentLevelIndex = 0;
     GlobalObject.levelData = await getLevelData();
   } else {
-    console.log("Error");
-    //Add fallback level here
+    GlobalObject.currentLevelIndex = -1;
+    GlobalObject.levelData = {
+      "id": -1,
+      "name": "Error",
+      "time": 1000000,
+      "coinTotal": 0,
+      "objects": [
+        {
+          "type": "Background",
+          "params": ["images/backgrounds/sky.png"]
+        },
+        {
+          "type": "Player",
+          "params": [300, 340]
+        },
+        {
+          "type": "Platform",
+          "params": [300, 395, 600, 20]
+        },
+        {
+          "type": "Coin",
+          "params": [20, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [40, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [60, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [20, 260]
+        },
+        {
+          "type": "Coin",
+          "params": [20, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [40, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [60, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [20, 300]
+        },
+        {
+          "type": "Coin",
+          "params": [20, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [40, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [60, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [100, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [120, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [140, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [100, 260]
+        },
+        {
+          "type": "Coin",
+          "params": [100, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [100, 300]
+        },
+        {
+          "type": "Coin",
+          "params": [100, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [180, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [220, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [200, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [180, 260]
+        },
+        {
+          "type": "Coin",
+          "params": [180, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [180, 300]
+        },
+        {
+          "type": "Coin",
+          "params": [180, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [260, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [280, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [300, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [260, 260]
+        },
+        {
+          "type": "Coin",
+          "params": [260, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [260, 300]
+        },
+        {
+          "type": "Coin",
+          "params": [260, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [300, 260]
+        },
+        {
+          "type": "Coin",
+          "params": [300, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [300, 300]
+        },
+        {
+          "type": "Coin",
+          "params": [300, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [280, 320]
+        },
+        {
+          "type": "Coin",
+          "params": [340, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [360, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [380, 240]
+        },
+        {
+          "type": "Coin",
+          "params": [340, 260]
+        },
+        {
+          "type": "Coin",
+          "params": [340, 280]
+        },
+        {
+          "type": "Coin",
+          "params": [340, 300]
+        },
+        {
+          "type": "Coin",
+          "params": [340, 320]
+        }
+      ]
+    }    
   }
 
   updateLevelDataWithWeather();

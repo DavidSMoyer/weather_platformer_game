@@ -203,6 +203,7 @@ PhysicsBody.prototype.update = function (engine) {
   this.inAir = true;
   this.collidingSide = PhysicsBody.SIDE.NONE;
   let bottomCollision = false;
+  let topCollision = false;
   engine.getAllColliders().forEach(collider => {
     if (collider.parentObject !== self.parentObject) {
       const collision = self.parentObject.getCollider().isCollidingWith(collider, engine);
@@ -214,6 +215,7 @@ PhysicsBody.prototype.update = function (engine) {
           self.xFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
           self.yVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
           collision.colliderA.parentObject.y = -collision.colliderA.yOffset + (collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height);
+          topCollision = true;
         }
 
         if( Math.abs((collision.colliderA.parentObject.x + collision.colliderA.xOffset + collision.colliderA.width) - (collision.colliderB.parentObject.x + collision.colliderB.xOffset)) < collisionTolerance) { //Right Collision
@@ -242,6 +244,7 @@ PhysicsBody.prototype.update = function (engine) {
   });
 
   if (bottomCollision) this.collidingSide = PhysicsBody.SIDE.BOTTOM;
+  if (topCollision) this.inAir = true;
 };
 
 PhysicsBody.prototype.getOnGround = function() {

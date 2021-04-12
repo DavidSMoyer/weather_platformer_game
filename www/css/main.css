@@ -59,7 +59,6 @@ ul {
   left: 50%;
   top: 0;
   transform: translate(-50%, 0);
-  border: 1px solid black;
 }
 
 #rainLayer {
