@@ -104,6 +104,16 @@ ul {
   width: 400px;
   position: absolute;
   color: white;
+  transition: transform 2s;
+  z-index: 2;
+}
+
+#leaderboard-right.hidden {
+  transform: translate(105%, 0);
+}
+
+#leaderboard-left.hidden {
+  transform: translate(-105%, 0);
 }
 
 #leaderboard-right ul,

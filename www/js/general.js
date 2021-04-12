@@ -97,11 +97,13 @@ async function sendLeaderboardData(level, time, coins, weather) {
 }
 
 function showLeaderboard() {
-  
+  document.querySelector("#leaderboard-left").classList.remove("hidden");
+  document.querySelector("#leaderboard-right").classList.remove("hidden");
 }
 
 function hideLeaderboard() {
-  
+  document.querySelector("#leaderboard-left").classList.add("hidden");
+  document.querySelector("#leaderboard-right").classList.add("hidden");
 }
 
 function playGame() {
@@ -172,7 +174,7 @@ function updateLevelDataWithWeather() {
 
 (async () => {
   const nick = showNickPopup();
-  //setInterval(leaderboardLoop, 5000);
+  setInterval(leaderboardLoop, 5000);
   //fillLeaderboards(1);
 
   const location = await getLocation();
