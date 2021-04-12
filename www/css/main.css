@@ -86,6 +86,7 @@ ul {
   border: 5px solid white;
   transition: top 1.25s ease-out, opacity 0.5s ease-in-out 0.5s;
   opacity: 1;
+  text-align: center;
 }
 
 #popup.hidden {
@@ -96,6 +97,18 @@ ul {
 
 #popup p {
   font-size: 10px;
+}
+
+#popup button {
+  all: unset;
+  margin-top: 30px;
+  margin-left: 30px;
+  cursor: pointer;
+}
+
+#popup button:hover,
+#popup button:focus {
+  text-decoration: underline;
 }
 
 #leaderboard-right,
