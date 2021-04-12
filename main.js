@@ -103,7 +103,7 @@ const recreateScoreDB = db => {
           whereString += ` AND weather LIKE '%${req.query.hasweather}%'`;
         }
 
-        const data = await queryDB(db, `SELECT * FROM playerScores ${whereString} ORDER BY time DESC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
+        const data = await queryDB(db, `SELECT * FROM playerScores ${whereString} ORDER BY time ASC LIMIT ${req.query.limit} OFFSET ${req.query.page * req.query.limit}; `);
         //Changes comma string to array
         data.forEach(score => {
           score.weather = score.weather.split(',');
