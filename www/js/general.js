@@ -112,7 +112,15 @@ function playGame() {
         fillLeaderboard(GlobalObject.levelData.id);
       })();
 
-      playNextLevel();
+      showLevelPopup(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.levelData.coinTotal, GlobalObject.conditionData)
+        .then(() => {
+          hideLeaderboard();
+          playNextLevel();
+        })
+        .catch(() => {
+          hideLeaderboard();
+          playGame();
+        });
     } else {
       playGame();
     }
