@@ -114,7 +114,7 @@ function playGame() {
       (async () => {
         showLeaderboard();
         await sendLeaderboardData(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.conditionData);
-        fillLeaderboard(GlobalObject.levelData.id);
+        fillLeaderboards(GlobalObject.levelData.id);
       })();
 
       showLevelPopup(GlobalObject.levelData.id, parseInt(e.getTime()), e.getCoins(), GlobalObject.levelData.coinTotal, GlobalObject.conditionData)
