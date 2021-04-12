@@ -209,35 +209,39 @@ PhysicsBody.prototype.update = function (engine) {
       const collision = self.parentObject.getCollider().isCollidingWith(collider, engine);
       if (collision) {
         this.inAir = false;
+        this.collidingSide = [
+          {dist: Math.abs((collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height) - (collision.colliderA.parentObject.y + collision.colliderA.yOffset)), side: PhysicsBody.SIDE.TOP },
+          {dist: Math.abs((collision.colliderA.parentObject.y + collision.colliderA.yOffset + collision.colliderA.height) - (collision.colliderB.parentObject.y + collision.colliderB.yOffset)), side: PhysicsBody.SIDE.BOTTOM },
+          {dist: Math.abs((collision.colliderB.parentObject.x + collision.colliderB.xOffset + collision.colliderB.width) - (collision.colliderA.parentObject.x + collision.colliderA.xOffset)), side: PhysicsBody.SIDE.LEFT },
+          {dist: Math.abs((collision.colliderA.parentObject.x + collision.colliderA.xOffset + collision.colliderA.width) - (collision.colliderB.parentObject.x + collision.colliderB.xOffset)), side: PhysicsBody.SIDE.RIGHT },
+        ].sort((a, b) => a.dist - b.dist).shift().side;
 
-        if( Math.abs((collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height) - (collision.colliderA.parentObject.y + collision.colliderA.yOffset)) < collisionTolerance) { //Top Collision
-          this.collidingSide = PhysicsBody.SIDE.TOP;
-          self.xFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
-          self.yVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
-          collision.colliderA.parentObject.y = -collision.colliderA.yOffset + (collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height);
-          topCollision = true;
-        }
+        switch(this.collidingSide) {
+          case PhysicsBody.SIDE.TOP:
+            self.xFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
+            self.yVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
+            collision.colliderA.parentObject.y = -collision.colliderA.yOffset + (collision.colliderB.parentObject.y + collision.colliderB.yOffset + collision.colliderB.height);
+            topCollision = true;
+            break;
 
-        if( Math.abs((collision.colliderA.parentObject.x + collision.colliderA.xOffset + collision.colliderA.width) - (collision.colliderB.parentObject.x + collision.colliderB.xOffset)) < collisionTolerance) { //Right Collision
-          this.collidingSide = PhysicsBody.SIDE.RIGHT;
-          self.yFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
-          self.xVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
-          collision.colliderA.parentObject.x = -collision.colliderA.xOffset - collision.colliderA.width + (collision.colliderB.parentObject.x + collision.colliderB.xOffset);
-        }
+          case PhysicsBody.SIDE.BOTTOM:
+            self.xFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
+            self.yVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
+            collision.colliderA.parentObject.y = -collision.colliderA.yOffset - collision.colliderA.height + (collision.colliderB.parentObject.y + collision.colliderB.yOffset);
+            bottomCollision = true;
+            break;
 
-        if( Math.abs((collision.colliderB.parentObject.x + collision.colliderB.xOffset + collision.colliderB.width) - (collision.colliderA.parentObject.x + collision.colliderA.xOffset)) < collisionTolerance) { //Left Collision
-          this.collidingSide = PhysicsBody.SIDE.LEFT;
-          self.yFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
-          self.xVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
-          collision.colliderA.parentObject.x = -collision.colliderA.xOffset + (collision.colliderB.parentObject.x + collision.colliderB.xOffset + collision.colliderB.width);
-        }
+          case PhysicsBody.SIDE.LEFT:
+            self.yFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
+            self.xVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
+            collision.colliderA.parentObject.x = -collision.colliderA.xOffset + (collision.colliderB.parentObject.x + collision.colliderB.xOffset + collision.colliderB.width);
+            break;
 
-        if( Math.abs((collision.colliderA.parentObject.y + collision.colliderA.yOffset + collision.colliderA.height) - (collision.colliderB.parentObject.y + collision.colliderB.yOffset)) < collisionTolerance) { //Bottom Collision
-          this.collidingSide = PhysicsBody.SIDE.BOTTOM;
-          self.xFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
-          self.yVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
-          collision.colliderA.parentObject.y = -collision.colliderA.yOffset - collision.colliderA.height + (collision.colliderB.parentObject.y + collision.colliderB.yOffset);
-          bottomCollision = true;
+          case PhysicsBody.SIDE.RIGHT:
+            self.yFriction = collision.colliderA.friction[this.collidingSide] + collision.colliderB.friction[this.collidingSide];
+            self.xVelocity *= -1 * (collision.colliderA.bounciness[this.collidingSide] + collision.colliderB.bounciness[this.collidingSide]);
+            collision.colliderA.parentObject.x = -collision.colliderA.xOffset - collision.colliderA.width + (collision.colliderB.parentObject.x + collision.colliderB.xOffset);
+            break;
         }
       }
     }
