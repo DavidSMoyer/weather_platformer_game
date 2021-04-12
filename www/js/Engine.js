@@ -611,8 +611,11 @@ GameEngine.PREFABS = Object.freeze({
     });
     return new GameObject(x, y, collider, new Sprite("images/flag.png", 16, 39));
   },
-  Platform: function(x, y, width, height, bounce = false) {
-    return new GameObject(x, y, new BoxCollider(width, height, 0,0,[0,0,0,0], [0,0,0,0]));
+  Platform: function(x, y, width, height, image = null) {
+    const obj = new GameObject(x, y, new BoxCollider(width, height, 0,0,[0,0,0,0], [0,0,0,0]));
+    if (image !== null)
+      obj.addComponent(new Sprite(image, width, height));
+    return obj;
   },
   Background: function(image) {
     const obj = new GameObject(300,200, new Sprite(image, 600, 400, 1));
