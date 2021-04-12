@@ -3,9 +3,9 @@ const OPENWEATHER_KEY = "577170a37c71d9c209c23f0d23034520";
 const SCORE_API_URL = "http://127.0.0.1:8080/API";
 const LEVEL_URL = "http://127.0.0.1:8080/levels";
 
-async function getLocation(options = {timeout: 30, maximumAge: 0, enableHighAccuracy: true}) {
-  const pos = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, options)).catch(() => null);
-  if (pos === null) return {lat: 180 - (Math.random() * 360), long: 90 - (Math.random() * 180)};
+async function getLocation(options = {timeout: 1000, maximumAge: 0, enableHighAccuracy: true}) {
+  const pos = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, options)).catch((() => null));
+  if (pos === null) return {long: 180 - (Math.random() * 360), lat: 90 - (Math.random() * 180)};
   return {lat: pos.coords.latitude, long: pos.coords.longitude};
 }
 
@@ -80,16 +80,20 @@ function leaderboardLoop() {
 async function sendLeaderboardData(level, time, coins, weather) {
   try {
     if (GlobalObject.currentLevelIndex !== -1) {
-      const req = await fetch(`${SCORE_API_URL}/score?name=${GlobalObject.userNick}&time=${time}&weather=[]&coins=${coins}&level=${level}`, {method:"POST"});
+      let weatherParm = [];
+      if (weather.temp <= -5)
+        weatherParm.push("ice");
+      if (weather.weather === "Rain" || weather.weather === "Snow")
+        weatherParm.push("rain");
+      if (weather.temp >= 30)
+        weatherParm.push("ice");
+      weatherParm = JSON.stringify(weatherParm);
+      const req = await fetch(`${SCORE_API_URL}/score?name=${GlobalObject.userNick}&time=${time}&weather=${weatherParm}&coins=${coins}&level=${level}`, {method:"POST"});
       if (!req.ok) throw new Error("fetch status not OK");
     }
   } catch(e) {
     console.log("Score post error: " + e);
   }
-}
-
-async function showGameOverPopup() {
-
 }
 
 function showLeaderboard() {
@@ -104,7 +108,6 @@ function playGame() {
   GlobalObject.activeEngine = new GameEngine(document.getElementById("mainCanvas"), GlobalObject.levelData);
   GlobalObject.activeEngine.onEnd(e => {
     GlobalObject.activeEngine = null;
-    console.log("Game Over");
     if (e.getWon()) {
       (async () => {
         showLeaderboard();
@@ -161,7 +164,10 @@ async function playNextLevel() {
 }
 
 function updateLevelDataWithWeather() {
-
+  const playerObj = GlobalObject.levelData.objects.find(o => o.type == "Player")
+  playerObj.params.push(GlobalObject.conditionData.weather === "Rain" || GlobalObject.conditionData.weather === "Snow");
+  playerObj.params.push(GlobalObject.conditionData.temp <= -5);
+  playerObj.params.push(GlobalObject.conditionData.temp >= 30);
 }
 
 (async () => {

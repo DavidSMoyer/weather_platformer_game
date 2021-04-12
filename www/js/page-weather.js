@@ -8,7 +8,7 @@ const context = rainCanvas.getContext("2d");
 function weatherEffects() {
   if (GlobalObject.conditionData.temp <= -5) document.body.classList.add("cold");
   if (GlobalObject.conditionData.temp >= 30) document.body.classList.add("hot");
-  if (GlobalObject.conditionData.weather === "Rain") {
+  if (GlobalObject.conditionData.weather === "Rain" || GlobalObject.conditionData.weather === "Snow") {
     document.body.classList.add("wet");
     setInterval(rainLoop, 10, GlobalObject.conditionData.temp)
   }

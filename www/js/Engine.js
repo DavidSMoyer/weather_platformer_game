@@ -171,7 +171,7 @@ PhysicsBody.SIDE = Object.freeze({
 });
 
 PhysicsBody.prototype.update = function (engine) {
-  const collisionTolerance = 2;
+  const collisionTolerance = 3;
   const self = this;
 
   //Update Friction
@@ -586,7 +586,7 @@ GameEngine.PREFABS = Object.freeze({
         speed: 3,
       },
     ];
-    return new Player(x, y, new BoxCollider(20,50,0,0,[floorSlippery?0.00025:0.001, 0.001, wallsSlippery?0.0005:0.00097, wallsSlippery?0.0005:0.00097], floorsHot?[1,1,0,0]:[0,0,0,0]), new PhysicsBody(), new Sprite(["images/player/idle/1.png", "images/player/idle/2.png"], 20, 50, 2), new Animator(animations));
+    return new Player(x, y, new BoxCollider(20,50,0,0,[0.001, (floorSlippery?0.00015:0.001), wallsSlippery?0.0005:0.00097, wallsSlippery?0.0005:0.00097], floorsHot?[1,1,0,0]:[0,0,0,0]), new PhysicsBody(), new Sprite(["images/player/idle/1.png", "images/player/idle/2.png"], 20, 50, 2), new Animator(animations));
   },
   Coin: function(x, y) {
     const collider = new BoxCollider(15.5,15.5,0,0,0,0,true);
