@@ -31,7 +31,7 @@ async function getWeather(lat, long) {
 function fillLeaderboards(level) {
   fillLeaderboard(document.querySelector("#fire"), level, "hot", "Fire");
   fillLeaderboard(document.querySelector("#ice"), level, "ice", "Ice");
-  fillLeaderboard(document.querySelector("#neutral"), level, "", "Neutral");
+  fillLeaderboard(document.querySelector("#neutral"), level, "NONE", "Neutral");
   fillLeaderboard(document.querySelector("#wet"), level, "rain", "Wet");
   fillLeaderboard(document.querySelector("#ice-wet"), level, "ice,rain", "Blizzard");
   fillLeaderboard(document.querySelector("#hot-wet"), level, "rain,hot", "Acid");
