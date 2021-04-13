@@ -37,7 +37,7 @@ function showLevelPopup(level, time, coins, coinTotal, weather) {
     if (weather.temp <= -5) conditionStr = "Cold";
     if (weather.weather === "Rain" || weather.weather === "Snow") {
       if (weather.temp >= 30 || weather.temp <= -5) {
-        conditonStr += ", Rain";
+        conditionStr += ", Rain";
       } else {
         conditionStr = "Rain";
       }
