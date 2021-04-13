@@ -3,6 +3,7 @@ let rain = [];
 let rainDelay = 100;
 const rainCanvas = document.querySelector("#rainLayer");
 const context = rainCanvas.getContext("2d");
+const maxParticles = 200;
 
 // Loads in the conditionData from the general script
 function weatherEffects() {
@@ -54,6 +55,9 @@ function rainLoop(temp) {
     if (temp > -5) rainDelay = 3;
     else rainDelay = 10;
   }
+
+  if (rain.length > maxParticles)
+    rain = rain.slice(rain.length - maxParticles, rain.length);
   rain.forEach(drop => drop.move(temp));
 }
 
