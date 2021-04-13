@@ -86,7 +86,7 @@ async function sendLeaderboardData(level, time, coins, weather) {
       if (weather.weather === "Rain" || weather.weather === "Snow")
         weatherParm.push("rain");
       if (weather.temp >= 30)
-        weatherParm.push("ice");
+        weatherParm.push("hot");
       weatherParm = JSON.stringify(weatherParm);
       const req = await fetch(`${SCORE_API_URL}/score?name=${GlobalObject.userNick}&time=${time}&weather=${weatherParm}&coins=${coins}&level=${level}`, {method:"POST"});
       if (!req.ok) throw new Error("fetch status not OK");
