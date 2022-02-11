@@ -1,5 +1,5 @@
 # Weather Platformer
-Welcome to our browser-based platformer that incorporates the local weather into the mechanics :)
+A web-based platformer that incorporates the local weather into the mechanics, developed by David Moyer and Austin Harms.
 
 ### Used Libraries/APIs
 [OpenWeatherMap](https://openweathermap.org)
